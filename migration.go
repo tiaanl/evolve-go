@@ -7,13 +7,13 @@ type Migration interface {
 
 func NewMigrationWrapper(up func(Schema), down func(Schema)) Migration {
 	return &migrationWrapper{
-		upFunc: up,
+		upFunc:   up,
 		downFunc: down,
 	}
 }
 
-type migrationWrapper struct{
-	upFunc func(Schema)
+type migrationWrapper struct {
+	upFunc   func(Schema)
 	downFunc func(Schema)
 }
 

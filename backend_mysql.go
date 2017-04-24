@@ -25,9 +25,9 @@ func (b *backEndMysql) CreateTable(table Table) error {
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
 		return err
-	} else {
-		fmt.Println(sql)
 	}
+
+	fmt.Println(sql)
 
 	return nil
 }
@@ -38,9 +38,9 @@ func (b *backEndMysql) DropTable(name string) error {
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
 		return err
-	} else {
-		fmt.Println(sql)
 	}
+
+	fmt.Println(sql)
 
 	return nil
 }
