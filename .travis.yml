@@ -12,7 +12,7 @@ install:
   - go get github.com/Masterminds/glide
 
 script:
-  - glide install
-  - diff -u <(echo -n) <(gofmt -d .)
   - go tool vet github.com/tiaanl/evolve-go
+  - glide install
+#  - diff -u <(echo -n) <(gofmt -d .)
   - go test -v -race github.com/tiaanl/evolve-go
