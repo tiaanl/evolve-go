@@ -64,7 +64,7 @@ func generateColumnLines(table Table) string {
 	return strings.Join(columnLines, ", ")
 }
 
-func columnTypeToString(column Column) string {
+func columnTypeToString(column *Column) string {
 	if column.Type == COLUMN_TYPE_INTEGER {
 		return "INT"
 	}
@@ -84,7 +84,7 @@ func columnTypeToString(column Column) string {
 	panic("Incorrect column type")
 }
 
-func nullOrNotNull(column Column) string {
+func nullOrNotNull(column *Column) string {
 	if column.AllowNull {
 		return "NULL"
 	}

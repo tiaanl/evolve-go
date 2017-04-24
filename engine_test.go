@@ -15,11 +15,11 @@ func TestEngine(t *testing.T) {
 		func(schema Schema) {
 			schema.CreateTable("users", func(table Table) {
 				table.Primary("id")
-				table.String("tableName", 100, false)
-				table.String("email", 150, false)
-				table.String("password", 100, false)
-				table.DateTime("created_at", true)
-				table.DateTime("updated_at", true)
+				table.String("name", 100).AllowNull(false)
+				table.String("email", 150).AllowNull(false)
+				table.String("password", 100).AllowNull(false)
+				table.DateTime("created_at").AllowNull(true)
+				table.DateTime("updated_at").AllowNull(true)
 			})
 		},
 		func(schema Schema) {

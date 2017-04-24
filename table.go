@@ -2,11 +2,11 @@ package evolve
 
 type Table interface {
 	Name() string
-	Columns() []Column
+	Columns() []*Column
 
-	Primary(name string)
-	String(name string, size int, allowNull bool)
-	DateTime(name string, allowNull bool)
+	Primary(name string) *fluentColumn
+	String(name string, size int) *fluentColumn
+	DateTime(name string) *fluentColumn
 }
 
 func NewTable(name string) Table {
@@ -17,40 +17,55 @@ func NewTable(name string) Table {
 
 type table struct {
 	name    string
-	columns []Column
+	columns []*Column
 }
 
 func (t *table) Name() string {
 	return t.name
 }
 
-func (t *table) Columns() []Column {
+func (t *table) Columns() []*Column {
 	return t.columns
 }
 
-func (t *table) Primary(name string) {
-	t.columns = append(t.columns, Column{
+func (t *table) Primary(name string) *fluentColumn {
+	column := &Column{
 		Name:      name,
 		Type:      COLUMN_TYPE_UNSIGNED_INTEGER,
+		Size:      0,
 		AllowNull: false,
 		IsPrimary: true,
-	})
+	}
+
+	t.columns = append(t.columns, column)
+
+	return NewFluentColumn(column)
 }
 
-func (t *table) String(name string, size int, allowNull bool) {
-	t.columns = append(t.columns, Column{
+func (t *table) String(name string, size int) *fluentColumn {
+	column := &Column{
 		Name:      name,
 		Type:      COLUMN_TYPE_STRING,
 		Size:      size,
-		AllowNull: allowNull,
+		AllowNull: true,
 		IsPrimary: false,
-	})
+	}
+
+	t.columns = append(t.columns, column)
+
+	return NewFluentColumn(column)
 }
 
-func (t *table) DateTime(name string, allowNull bool) {
-	t.columns = append(t.columns, Column{
+func (t *table) DateTime(name string) *fluentColumn {
+	column := &Column{
 		Name:      name,
 		Type:      COLUMN_TYPE_DATE_TIME,
-		AllowNull: allowNull,
-	})
+		Size:      0,
+		AllowNull: true,
+		IsPrimary: false,
+	}
+
+	t.columns = append(t.columns, column)
+
+	return NewFluentColumn(column)
 }

@@ -16,3 +16,23 @@ type Column struct {
 	AllowNull bool
 	IsPrimary bool
 }
+
+func NewFluentColumn(column *Column) *fluentColumn {
+	return &fluentColumn{
+		column: column,
+	}
+}
+
+type fluentColumn struct {
+	column *Column
+}
+
+func (f *fluentColumn) AllowNull(allowNull bool) *fluentColumn {
+	f.column.AllowNull = allowNull
+	return f
+}
+
+func (f *fluentColumn) IsPrimary(isPrimary bool) *fluentColumn {
+	f.column.IsPrimary = isPrimary
+	return f
+}
