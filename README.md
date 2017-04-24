@@ -41,7 +41,7 @@ Now `Execute` the migration and specify the back end to use.
 
 ```go
 // Up
-err := engine.Up()
+err := engine.Up(backEnd)
 // or Down
-err := engine.Down()
+err := engine.Down(backEnd)
 ```
