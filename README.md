@@ -1,6 +1,7 @@
 # evolve-go
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/tiaanl/evolve-go)](https://goreportcard.com/report/github.com/tiaanl/evolve-go)
+[![Build Status](https://travis-ci.org/tiaanl/evolve-go.svg?branch=master)](https://travis-ci.org/tiaanl/evolve-go)
 
 ## Install
 
