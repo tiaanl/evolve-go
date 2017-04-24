@@ -1,8 +1,12 @@
-# evolve-go
+package evolve
 
-## Example
+import (
+	"testing"
 
-```go
+	"github.com/stretchr/testify/assert"
+)
+
+func TestEngine(t *testing.T) {
 	backEnd := NewBackEndMysql(nil)
 
 	engine := NewEngine()
@@ -23,8 +27,9 @@
 		},
 	))
 
-	err := engine.Up()
-	if err != nil {
-		panic(err)
-	}
-```
+	err := engine.Up(backEnd)
+	assert.NoError(t, err)
+
+	err = engine.Down(backEnd)
+	assert.NoError(t, err)
+}

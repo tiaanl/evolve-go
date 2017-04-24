@@ -1,12 +1,26 @@
 package evolve
 
-type Migration struct {
+type Migration interface {
+	Up(schema Schema)
+	Down(schema Schema)
 }
 
-func (m *Migration) Up() error {
-	return nil
+func NewMigrationWrapper(up func(Schema), down func(Schema)) Migration {
+	return &migrationWrapper{
+		upFunc: up,
+		downFunc: down,
+	}
 }
 
-func (m *Migration) Down() error {
-	return nil
+type migrationWrapper struct{
+	upFunc func(Schema)
+	downFunc func(Schema)
+}
+
+func (m *migrationWrapper) Up(schema Schema) {
+	m.upFunc(schema)
+}
+
+func (m *migrationWrapper) Down(schema Schema) {
+	m.downFunc(schema)
 }
