@@ -6,9 +6,9 @@
 go get github.com/tiaanl/evolve-go
 ```
 
-## Use it in your project
+## Example
 
-Create the `Engine` and then add your migrations.  `Execute` the migrations (up or down) and specify the back end to use. (currently only Mysql)
+Create the `Engine` and then add your migrations.
 
 ```go
 engine := NewEngine()
@@ -26,8 +26,22 @@ engine.AddMigration(NewMigrationWrapper(
         schema.DropTable("users")
     },
 ))
+```
 
+Create the back end you want to run the migration with:
+
+```go
 connection, err := sql.Open("...", "...")
 
-err := engine.Up(NewBackEndMysql(connection))
+// mysql
+backEnd := NewBackEndMysql(connection)
+```
+
+Now `Execute` the migration and specify the back end to use.
+
+```go
+// Up
+err := engine.Up()
+// or Down
+err := engine.Down()
 ```
