@@ -1,5 +1,7 @@
 # evolve-go
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/tiaanl/evolve-go)](https://goreportcard.com/report/github.com/tiaanl/evolve-go)
+
 ## Install
 
 ```bash
