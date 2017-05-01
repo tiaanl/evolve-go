@@ -17,7 +17,7 @@ type Column struct {
 	IsPrimary bool
 }
 
-func NewFluentColumn(column *Column) *fluentColumn {
+func newFluentColumn(column *Column) *fluentColumn {
 	return &fluentColumn{
 		column: column,
 	}

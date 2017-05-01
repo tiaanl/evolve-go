@@ -1,6 +1,18 @@
-hash: 9e7a4a0d299820d97c2a22e0b705795ab3edeb8022ddd49998ed86389dcff72d
-updated: 2017-04-23T23:10:35.264494672+02:00
+hash: 6aee5e56aebb26d75e7db012d7ca716c17c1f1c6e80404cab515d09b24a285a8
+updated: 2017-04-24T13:53:22.858877997+02:00
 imports:
+- name: github.com/mattn/go-sqlite3
+  version: ca5e3819723d8eeaf170ad510e7da1d6d2e94a08
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
-testImports: []
+  subpackages:
+  - assert
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib

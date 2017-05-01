@@ -39,7 +39,7 @@ func (t *table) Primary(name string) *fluentColumn {
 
 	t.columns = append(t.columns, column)
 
-	return NewFluentColumn(column)
+	return newFluentColumn(column)
 }
 
 func (t *table) String(name string, size int) *fluentColumn {
@@ -53,7 +53,7 @@ func (t *table) String(name string, size int) *fluentColumn {
 
 	t.columns = append(t.columns, column)
 
-	return NewFluentColumn(column)
+	return newFluentColumn(column)
 }
 
 func (t *table) DateTime(name string) *fluentColumn {
@@ -67,5 +67,5 @@ func (t *table) DateTime(name string) *fluentColumn {
 
 	t.columns = append(t.columns, column)
 
-	return NewFluentColumn(column)
+	return newFluentColumn(column)
 }

@@ -1,35 +1,67 @@
 package evolve
 
-type Engine interface {
-	AddMigration(migration Migration)
+import (
+	"fmt"
+)
 
-	Up(backEnd BackEnd) error
-	Down(backEnd BackEnd) error
+type Engine interface {
+	AddMigration(name string, migration Migration) error
+
+	Up() error
+	Down() error
 }
 
-func NewEngine() Engine {
+func NewEngine(backEnd BackEnd) Engine {
 	return &engine{
-		migrations: []Migration{},
+		backEnd:    backEnd,
+		migrations: map[string]Migration{},
+		order:      map[int]string{},
+		lastIndex:  0,
 	}
 }
 
 type engine struct {
-	migrations []Migration
+	backEnd    BackEnd
+	migrations map[string]Migration
+	order      map[int]string
+	lastIndex  int
 }
 
-func (e *engine) AddMigration(migration Migration) {
-	e.migrations = append(e.migrations, migration)
+func (e *engine) AddMigration(name string, migration Migration) error {
+	// Make sure the key doesn't exist already.
+	_, exists := e.migrations[name]
+	if exists {
+		return fmt.Errorf("Migration with that name already exists (%s)", name)
+	}
+
+	// Set the key and migration.
+	e.migrations[name] = migration
+
+	e.order[e.lastIndex] = name
+	e.lastIndex = e.lastIndex + 1
+
+	return nil
 }
 
-func (e *engine) Up(backEnd BackEnd) error {
-	return e.execute(backEnd, up)
+func (e *engine) Up() error {
+	return e.execute(e.backEnd, up)
 }
 
-func (e *engine) Down(backEnd BackEnd) error {
-	return e.execute(backEnd, down)
+func (e *engine) Down() error {
+	return e.execute(e.backEnd, down)
 }
 
 func (e *engine) execute(backEnd BackEnd, fn func(Migration, Schema)) error {
+	// Make sure the migrations table exists.
+	table := NewTable("migrations")
+	table.Primary("id")
+	table.String("name", 100)
+
+	err := backEnd.CreateTableIfNotExists(table)
+	if err != nil {
+		return err
+	}
+
 	// Create the command bus we will collect all the migration commands into.
 	commandBus := NewCommandBus()
 
@@ -37,12 +69,16 @@ func (e *engine) execute(backEnd BackEnd, fn func(Migration, Schema)) error {
 	schema := NewSchema(commandBus)
 
 	// Run through all the migrations to gather commands into the schema's command bus.
-	for _, migration := range e.migrations {
+	for _, migrationName := range e.order {
+		migration := e.migrations[migrationName]
+
+		fmt.Println("[" + migrationName + "]")
+
 		fn(migration, schema)
 	}
 
 	// Execute all the commands in the command bus and report any errors.
-	err := commandBus.Execute(backEnd)
+	err = commandBus.Execute(backEnd)
 	if err != nil {
 		return err
 	}
