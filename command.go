@@ -1,5 +1,5 @@
 package evolve
 
-type Command interface {
+type command interface {
 	Execute(backEnd BackEnd) error
 }

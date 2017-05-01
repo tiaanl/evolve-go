@@ -26,12 +26,12 @@ func (s *schema) CreateTable(tableName string, fn CreateTableFunc) {
 	fn(newTable)
 
 	// Create the command.
-	command := NewCreateTableCommand(newTable)
+	command := newCreateTableCommand(newTable)
 
 	// Add the new command to the command bus.
 	s.commandBus.Add(command)
 }
 
 func (s *schema) DropTable(name string) {
-	s.commandBus.Add(NewDropTableCommand(name))
+	s.commandBus.Add(newDropTableCommand(name))
 }

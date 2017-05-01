@@ -1,6 +1,6 @@
 package evolve
 
-func NewCreateTableCommand(table Table) Command {
+func newCreateTableCommand(table Table) command {
 	return &createTableCommand{
 		table: table,
 	}

@@ -1,19 +1,19 @@
 package evolve
 
 type CommandBus interface {
-	Command
+	command
 
-	Add(command Command)
+	Add(command command)
 }
 
 func NewCommandBus() CommandBus {
 	return &commandBus{
-		commands: []Command{},
+		commands: []command{},
 	}
 }
 
 type commandBus struct {
-	commands []Command
+	commands []command
 }
 
 func (c *commandBus) Execute(backEnd BackEnd) error {
@@ -28,6 +28,6 @@ func (c *commandBus) Execute(backEnd BackEnd) error {
 	return nil
 }
 
-func (c *commandBus) Add(command Command) {
+func (c *commandBus) Add(command command) {
 	c.commands = append(c.commands, command)
 }
