@@ -8,14 +8,14 @@ type Schema interface {
 	DropTable(tableName string)
 }
 
-func NewSchema(commandBus CommandBus) Schema {
+func NewSchema(commandBus *commandBus) Schema {
 	return &schema{
 		commandBus: commandBus,
 	}
 }
 
 type schema struct {
-	commandBus CommandBus
+	commandBus *commandBus
 }
 
 func (s *schema) CreateTable(tableName string, fn CreateTableFunc) {

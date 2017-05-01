@@ -63,7 +63,7 @@ func (e *engine) execute(backEnd BackEnd, fn func(Migration, Schema)) error {
 	}
 
 	// Create the command bus we will collect all the migration commands into.
-	commandBus := NewCommandBus()
+	commandBus := newCommandBus()
 
 	// Create the user friendly schema we'll pass to the user so that they can interact with the command bus.
 	schema := NewSchema(commandBus)
