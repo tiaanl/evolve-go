@@ -1,10 +1,5 @@
 package evolve
 
-import (
-	"fmt"
-	"strings"
-)
-
 type MigrationList interface {
 	GetMigrations() ([]string, error)
 	AddMigrations(migrationNames ...string) error
@@ -50,14 +45,14 @@ func (ml *migrationList) GetMigrations() ([]string, error) {
 func (ml *migrationList) AddMigrations(migrationNames ...string) error {
 	ml.EnsureMigrationsTableExists()
 
-	sql := fmt.Sprintf("INSERT INTO migrations (name) VALUES ('%s')",
-		strings.Join(migrationNames, "'), ('"))
+	for _, migrationName := range migrationNames {
+		err := ml.backEnd.InsertData("migrations", []string{"name"}, []string{migrationName})
+		if err != nil {
+			return err
+		}
+	}
 
-	fmt.Println(sql)
-
-	_, err := ml.backEnd.Connection().Exec(sql)
-
-	return err
+	return nil
 }
 
 func (ml *migrationList) EnsureMigrationsTableExists() error {

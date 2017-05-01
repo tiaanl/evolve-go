@@ -14,4 +14,7 @@ type BackEnd interface {
 
 	// Drop a table on the connection.
 	DropTable(name string) error
+
+	// Insert data into the the given table.
+	InsertData(table string, columns []string, values []string) error
 }

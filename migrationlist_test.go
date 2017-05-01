@@ -2,20 +2,19 @@ package evolve
 
 import (
 	"database/sql"
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMigrationList_AddMigrations(t *testing.T) {
-	connection, err := sql.Open("sqlite3", ":memory:")
+	connection, err := sql.Open("mysql", "root:@tcp(localhost:3306)/evolve-test")
 	if err != nil {
 		t.Error(err)
-		return
 	}
 	defer connection.Close()
 
-	// Create a back end over the connection.
-	backEnd := NewBackEndSqlite3(connection)
+	backEnd := NewBackEndMysql(connection)
 
 	migrationList := NewMigrationList(backEnd)
 
@@ -31,5 +30,16 @@ func TestMigrationList_AddMigrations(t *testing.T) {
 		return
 	}
 
-	fmt.Println(migrations)
+	checks := map[string]bool{}
+
+	// Make sure all the migrations are there.
+	for _, migrationName := range migrations {
+		checks[migrationName] = true
+	}
+
+	assert.Equal(t, true, checks["migration1"])
+	assert.Equal(t, true, checks["migration2"])
+	assert.Equal(t, true, checks["migration3"])
+
+	backEnd.DropTable("migrations")
 }

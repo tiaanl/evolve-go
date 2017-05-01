@@ -22,7 +22,7 @@ func TestEngine(t *testing.T) {
 	}
 
 	// Create the back end connected to the sqlite3 in memory database.
-	backEnd := NewBackEndSqlite3(connection)
+	backEnd := NewBackEndMysql(connection)
 
 	engine := NewEngine(backEnd)
 
@@ -62,4 +62,6 @@ func TestEngine(t *testing.T) {
 
 	err = engine.Down()
 	assert.NoError(t, err)
+
+	backEnd.DropTable("migrations")
 }

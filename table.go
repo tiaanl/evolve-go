@@ -3,6 +3,7 @@ package evolve
 type Table interface {
 	Name() string
 	Columns() []*Column
+	Column(name string) *Column
 
 	Primary(name string) *fluentColumn
 	String(name string, size int) *fluentColumn
@@ -26,6 +27,17 @@ func (t *table) Name() string {
 
 func (t *table) Columns() []*Column {
 	return t.columns
+}
+
+// Return the column with the specified name.  Returns nil if the column isn't found.
+func (t *table) Column(name string) *Column {
+	for _, column := range t.columns {
+		if column.Name == name {
+			return column
+		}
+	}
+
+	return nil
 }
 
 func (t *table) Primary(name string) *fluentColumn {

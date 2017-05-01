@@ -65,6 +65,19 @@ func (b *backEndSqlite3) DropTable(name string) error {
 	return nil
 }
 
+func (b *backEndSqlite3) InsertData(table string, columns []string, values []string) error {
+	columnsStr := fmt.Sprintf("(`%s`)", strings.Join(columns, "`), (`"))
+	valuesStr := fmt.Sprintf("('%s')", strings.Join(values, "'), ('"))
+
+	sql := fmt.Sprintf("INSERT INTO `%s` %s VALUES %s", table, columnsStr, valuesStr)
+
+	fmt.Println(sql)
+
+	_, err := b.db.Exec(sql)
+
+	return err
+}
+
 func generateColumnLinesSqlite3(table Table) string {
 	columnLines := []string{}
 	for _, column := range table.Columns() {
