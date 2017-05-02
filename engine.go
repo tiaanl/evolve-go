@@ -71,9 +71,6 @@ func (e *engine) execute(backEnd BackEnd, fn func(Migration, Schema)) error {
 	// Run through all the migrations to gather commands into the schema's command bus.
 	for _, migrationName := range e.order {
 		migration := e.migrations[migrationName]
-
-		fmt.Println("[" + migrationName + "]")
-
 		fn(migration, schema)
 	}
 

@@ -31,8 +31,6 @@ func (b *backEndSqlite3) CreateTable(table Table) error {
 		return err
 	}
 
-	fmt.Println(sql)
-
 	return nil
 }
 
@@ -47,8 +45,6 @@ func (b *backEndSqlite3) CreateTableIfNotExists(table Table) error {
 		return err
 	}
 
-	fmt.Println(sql)
-
 	return nil
 }
 
@@ -60,8 +56,6 @@ func (b *backEndSqlite3) DropTable(name string) error {
 		return err
 	}
 
-	fmt.Println(sql)
-
 	return nil
 }
 
@@ -70,8 +64,6 @@ func (b *backEndSqlite3) InsertData(table string, columns []string, values []str
 	valuesStr := fmt.Sprintf("('%s')", strings.Join(values, "'), ('"))
 
 	sql := fmt.Sprintf("INSERT INTO `%s` %s VALUES %s", table, columnsStr, valuesStr)
-
-	fmt.Println(sql)
 
 	_, err := b.db.Exec(sql)
 

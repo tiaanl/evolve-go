@@ -26,8 +26,6 @@ func (b *backEndMysql) CreateTable(table Table) error {
 		generateColumnLinesMysql(table),
 	)
 
-	fmt.Println(sql)
-
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
 		return err
@@ -42,8 +40,6 @@ func (b *backEndMysql) CreateTableIfNotExists(table Table) error {
 		generateColumnLinesMysql(table),
 	)
 
-	fmt.Println(sql)
-
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
 		return err
@@ -54,8 +50,6 @@ func (b *backEndMysql) CreateTableIfNotExists(table Table) error {
 
 func (b *backEndMysql) DropTable(name string) error {
 	sql := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", name)
-
-	fmt.Println(sql)
 
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
@@ -70,8 +64,6 @@ func (b *backEndMysql) InsertData(table string, columns []string, values []strin
 	valuesStr := fmt.Sprintf("('%s')", strings.Join(values, "'), ('"))
 
 	sql := fmt.Sprintf("INSERT INTO `%s` %s VALUES %s", table, columnsStr, valuesStr)
-
-	fmt.Println(sql)
 
 	_, err := b.db.Exec(sql)
 
