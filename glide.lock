@@ -1,6 +1,8 @@
-hash: 178debb02bd41144248e767b118f53b60bc14bee2134c0247099d154373eaa4c
-updated: 2017-05-01T20:01:52.796099548-03:00
+hash: 80b6319ae8b98cf0616384bb6f5cf9258d3700025df191b29937cc0d61ffd536
+updated: 2017-05-02T16:20:01.340403253-03:00
 imports:
+- name: github.com/DATA-DOG/go-sqlmock
+  version: b983233bc0bbea4dc6e8ec8c8c923d935765ffec
 - name: github.com/go-sql-driver/mysql
   version: a0583e0143b1624142adab07e0e97fe106d99561
 - name: github.com/mattn/go-sqlite3

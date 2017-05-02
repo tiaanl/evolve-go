@@ -1,20 +1,31 @@
 package evolve
 
 import (
-	"database/sql"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMigrationList_AddMigrations(t *testing.T) {
-	connection, err := sql.Open("mysql", "root:@tcp(localhost:3306)/evolve-test")
+	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Error(err)
 	}
-	defer connection.Close()
+	defer db.Close()
 
-	backEnd := NewBackEndMysql(connection)
+	mock.ExpectExec("CREATE TABLE IF NOT EXISTS")
+	mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectQuery("SELECT name FROM migrations").WillReturnRows(
+		sqlmock.NewRows([]string{"name"}).
+			AddRow("migration1").
+			AddRow("migration2").
+			AddRow("migration3"),
+	)
+
+	backEnd := NewBackEndSqlite3(db)
 
 	migrationList := NewMigrationList(backEnd)
 
