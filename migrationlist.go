@@ -1,7 +1,5 @@
 package evolve
 
-import "fmt"
-
 type MigrationList interface {
 	Exists(name string) (bool, error)
 	Add(migrationNames ...string) error
@@ -61,7 +59,6 @@ func (ml *migrationList) getMigrationsFromDatabase() ([]string, error) {
 	migrations := []string{}
 
 	sql := "SELECT name FROM migrations ORDER BY name ASC"
-	fmt.Println("migrationlist: " + sql)
 
 	rows, err := ml.backEnd.Connection().Query(sql)
 	if err != nil {

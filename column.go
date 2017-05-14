@@ -10,11 +10,12 @@ const (
 )
 
 type Column struct {
-	Name      string
-	Type      ColumnType
-	Size      int
-	AllowNull bool
-	IsPrimary bool
+	Name          string
+	Type          ColumnType
+	Size          int
+	AllowNull     bool
+	IsPrimary     bool
+	AutoIncrement bool
 }
 
 func newFluentColumn(column *Column) *fluentColumn {
@@ -34,5 +35,10 @@ func (f *fluentColumn) AllowNull(allowNull bool) *fluentColumn {
 
 func (f *fluentColumn) IsPrimary(isPrimary bool) *fluentColumn {
 	f.column.IsPrimary = isPrimary
+	return f
+}
+
+func (f *fluentColumn) AutoIncrement(autoIncrement bool) *fluentColumn {
+	f.column.AutoIncrement = autoIncrement
 	return f
 }

@@ -79,8 +79,12 @@ func generateColumnLinesMysql(table Table) string {
 			nullOrNotNullMysql(column),
 		)
 
+		if column.AutoIncrement {
+			line = line + " AUTO_INCREMENT"
+		}
+
 		if column.IsPrimary {
-			line = line + " AUTO_INCREMENT PRIMARY KEY"
+			line = line + " PRIMARY KEY"
 		}
 
 		columnLines = append(columnLines, line)
