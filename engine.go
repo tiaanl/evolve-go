@@ -7,24 +7,25 @@ import (
 type Engine interface {
 	AddMigration(name string, migration Migration) error
 
-	Up() error
-	Down() error
+	Update() error
 }
 
 func NewEngine(backEnd BackEnd) Engine {
 	return &engine{
-		backEnd:    backEnd,
-		migrations: map[string]Migration{},
-		order:      map[int]string{},
-		lastIndex:  0,
+		backEnd:       backEnd,
+		migrations:    map[string]Migration{},
+		order:         map[int]string{},
+		lastIndex:     0,
+		migrationList: NewMigrationList(backEnd),
 	}
 }
 
 type engine struct {
-	backEnd    BackEnd
-	migrations map[string]Migration
-	order      map[int]string
-	lastIndex  int
+	backEnd       BackEnd
+	migrations    map[string]Migration
+	order         map[int]string
+	lastIndex     int
+	migrationList MigrationList
 }
 
 func (e *engine) AddMigration(name string, migration Migration) error {
@@ -43,50 +44,32 @@ func (e *engine) AddMigration(name string, migration Migration) error {
 	return nil
 }
 
-func (e *engine) Up() error {
-	return e.execute(e.backEnd, up)
-}
-
-func (e *engine) Down() error {
-	return e.execute(e.backEnd, down)
-}
-
-func (e *engine) execute(backEnd BackEnd, fn func(Migration, Schema)) error {
-	// Make sure the migrations table exists.
-	table := NewTable("migrations")
-	table.Primary("id")
-	table.String("name", 100)
-
-	err := backEnd.CreateTableIfNotExists(table)
-	if err != nil {
-		return err
-	}
-
+func (e *engine) Update() error {
 	// Create the command bus we will collect all the migration commands into.
 	commandBus := newCommandBus()
 
 	// Create the user friendly schema we'll pass to the user so that they can interact with the command bus.
 	schema := NewSchema(commandBus)
 
-	// Run through all the migrations to gather commands into the schema's command bus.
+	// Run through all the existingMigrations to gather commands into the schema's command bus.
 	for _, migrationName := range e.order {
-		migration := e.migrations[migrationName]
-		fn(migration, schema)
+		exists, err := e.migrationList.Exists(migrationName)
+		if err != nil {
+			return err
+		}
+
+		if !exists {
+			migration := e.migrations[migrationName]
+			migration.Up(schema)
+			e.migrationList.Add(migrationName)
+		}
 	}
 
 	// Execute all the commands in the command bus and report any errors.
-	err = commandBus.Execute(backEnd)
+	err := commandBus.Execute(e.backEnd)
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func up(m Migration, s Schema) {
-	m.Up(s)
-}
-
-func down(m Migration, s Schema) {
-	m.Down(s)
 }

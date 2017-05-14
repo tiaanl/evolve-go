@@ -15,41 +15,26 @@ func TestMigrationList_AddMigrations(t *testing.T) {
 	defer db.Close()
 
 	for _, backEnd := range []BackEnd{NewBackEndMysql(db), NewBackEndSqlite3(db)} {
-		mock.ExpectExec("CREATE TABLE IF NOT EXISTS")
+		mock.ExpectExec("CREATE TABLE IF NOT EXISTS").WillReturnResult(sqlmock.NewResult(0, 1))
 		mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
 		mock.ExpectExec("INSERT INTO `migrations`").WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectQuery("SELECT name FROM migrations").WillReturnRows(
-			sqlmock.NewRows([]string{"name"}).
-				AddRow("migration1").
-				AddRow("migration2").
-				AddRow("migration3"),
-		)
 
 		migrationList := NewMigrationList(backEnd)
 
-		err = migrationList.AddMigrations("migration1", "migration2", "migration3")
+		err = migrationList.Add("migration1", "migration2", "migration3")
 		if err != nil {
 			t.Error(err)
 			return
 		}
 
-		migrations, err := migrationList.GetMigrations()
-		if err != nil {
-			t.Error(err)
-			return
+		for _, name := range []string{"migration1", "migration2", "migration3"} {
+			migrationExists, err := migrationList.Exists(name)
+			if err != nil {
+				t.Error(err)
+			}
+			assert.Equal(t, true, migrationExists)
 		}
-
-		checks := map[string]bool{}
-
-		// Make sure all the migrations are there.
-		for _, migrationName := range migrations {
-			checks[migrationName] = true
-		}
-
-		assert.Equal(t, true, checks["migration1"])
-		assert.Equal(t, true, checks["migration2"])
-		assert.Equal(t, true, checks["migration3"])
 
 		backEnd.DropTable("migrations")
 	}
