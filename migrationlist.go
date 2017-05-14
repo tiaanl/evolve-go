@@ -109,7 +109,7 @@ func (ml *migrationList) ensureMigrationsTableExists() error {
 
 	// Make sure the existingMigrations table exists.
 	table := NewTable("migrations")
-	table.String("name", 50).IsPrimary(true)
+	table.String("name", 50).AllowNull(false).IsPrimary(true)
 
 	err := ml.backEnd.CreateTableIfNotExists(table)
 	if err != nil {
