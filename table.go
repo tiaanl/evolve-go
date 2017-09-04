@@ -2,11 +2,14 @@ package evolve
 
 type Table interface {
 	Name() string
+
 	Columns() []*Column
 	Column(name string) *Column
+	AddColumn(column *Column)
 
 	Primary(name string) *fluentColumn
 	String(name string, size int) *fluentColumn
+	Integer(name string) *fluentColumn
 	DateTime(name string) *fluentColumn
 }
 
@@ -40,6 +43,10 @@ func (t *table) Column(name string) *Column {
 	return nil
 }
 
+func (t *table) AddColumn(column *Column) {
+	t.columns = append(t.columns, column)
+}
+
 func (t *table) Primary(name string) *fluentColumn {
 	column := &Column{
 		Name:          name,
@@ -60,6 +67,21 @@ func (t *table) String(name string, size int) *fluentColumn {
 		Name:          name,
 		Type:          COLUMN_TYPE_STRING,
 		Size:          size,
+		AllowNull:     true,
+		IsPrimary:     false,
+		AutoIncrement: false,
+	}
+
+	t.columns = append(t.columns, column)
+
+	return newFluentColumn(column)
+}
+
+func (t *table) Integer(name string) *fluentColumn {
+	column := &Column{
+		Name:          name,
+		Type:          COLUMN_TYPE_INTEGER,
+		Size:          9,
 		AllowNull:     true,
 		IsPrimary:     false,
 		AutoIncrement: false,

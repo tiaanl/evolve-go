@@ -16,6 +16,16 @@ type backEndSqlite3 struct {
 	db *sql.DB
 }
 
+func (b *backEndSqlite3) ToSQL(s Schema) string {
+	var result string
+
+	for _, table := range s.Tables() {
+		result += createTableSQLSqlite3(table)
+	}
+
+	return result
+}
+
 func (b *backEndSqlite3) Connection() *sql.DB {
 	return b.db
 }
@@ -35,10 +45,7 @@ func (b *backEndSqlite3) CreateTable(table Table) error {
 }
 
 func (b *backEndSqlite3) CreateTableIfNotExists(table Table) error {
-	sql := fmt.Sprintf("CREATE TABLE IF NOT EXISTS `%s` (%s)",
-		table.Name(),
-		generateColumnLinesSqlite3(table),
-	)
+	sql := createTableSQLSqlite3(table)
 
 	if b.db != nil {
 		_, err := b.db.Exec(sql)
@@ -115,4 +122,11 @@ func nullOrNotNullSqlite3(column *Column) string {
 	}
 
 	return "NOT NULL"
+}
+
+func createTableSQLSqlite3(table Table) string {
+	return fmt.Sprintf("CREATE TABLE `%s` (%s)",
+		table.Name(),
+		generateColumnLinesSqlite3(table),
+	)
 }

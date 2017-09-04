@@ -16,6 +16,16 @@ type backEndMysql struct {
 	db *sql.DB
 }
 
+func (b *backEndMysql) ToSQL(s Schema) string {
+	var result string
+
+	for _, table := range s.Tables() {
+		result += createTableSQLMysql(table)
+	}
+
+	return result
+}
+
 func (b *backEndMysql) Connection() *sql.DB {
 	return b.db
 }
@@ -68,6 +78,13 @@ func (b *backEndMysql) InsertData(table string, columns []string, values []strin
 	_, err := b.db.Exec(sql)
 
 	return err
+}
+
+func createTableSQLMysql(table Table) string {
+	return fmt.Sprintf("CREATE TABLE `%s` (%s)",
+		table.Name(),
+		generateColumnLinesMysql(table),
+	)
 }
 
 func generateColumnLinesMysql(table Table) string {

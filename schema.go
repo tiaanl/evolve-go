@@ -4,6 +4,9 @@ type CreateTableFunc func(t Table)
 
 // Schema is the user friendly interface to put Commands into a command bus.
 type Schema interface {
+	Table(tableName string, fn CreateTableFunc)
+	Tables() []Table
+
 	CreateTable(tableName string, fn CreateTableFunc)
 	DropTable(tableName string)
 }
@@ -11,11 +14,23 @@ type Schema interface {
 func NewSchema(commandBus *commandBus) Schema {
 	return &schema{
 		commandBus: commandBus,
+		tables:     []Table{},
 	}
 }
 
 type schema struct {
 	commandBus *commandBus
+	tables     []Table
+}
+
+func (s *schema) Tables() []Table {
+	return s.tables
+}
+
+func (s *schema) Table(tableName string, fn CreateTableFunc) {
+	newTable := NewTable(tableName)
+	fn(newTable)
+	s.tables = append(s.tables, newTable)
 }
 
 func (s *schema) CreateTable(tableName string, fn CreateTableFunc) {
