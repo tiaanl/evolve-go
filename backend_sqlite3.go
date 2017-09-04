@@ -26,6 +26,10 @@ func (b *backEndSqlite3) ToSQL(s Schema) string {
 	return result
 }
 
+func (b *backEndSqlite3) BuildSchema() (Schema, error) {
+	return nil, nil
+}
+
 func (b *backEndSqlite3) Connection() *sql.DB {
 	return b.db
 }

@@ -15,7 +15,15 @@ type Table interface {
 
 func NewTable(name string) Table {
 	return &table{
-		name: name,
+		name:    name,
+		columns: []*Column{},
+	}
+}
+
+func NewTableWithColumns(tableName string, columns []*Column) Table {
+	return &table{
+		name:    tableName,
+		columns: columns,
 	}
 }
 

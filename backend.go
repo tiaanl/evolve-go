@@ -6,6 +6,9 @@ type BackEnd interface {
 	// Return SQL for the given schema.
 	ToSQL(s Schema) string
 
+	// Return a Schema from the current connection.
+	BuildSchema() (Schema, error)
+
 	// Return the connection that this back end represents.
 	Connection() *sql.DB
 

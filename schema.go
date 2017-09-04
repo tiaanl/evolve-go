@@ -4,7 +4,9 @@ type CreateTableFunc func(t Table)
 
 // Schema is the user friendly interface to put Commands into a command bus.
 type Schema interface {
-	Table(tableName string, fn CreateTableFunc)
+	CreateTableWithColumns(tableName string, columns []*Column)
+	CreateTableWithFunc(tableName string, fn CreateTableFunc)
+
 	Tables() []Table
 }
 
@@ -22,7 +24,18 @@ func (s *schema) Tables() []Table {
 	return s.tables
 }
 
-func (s *schema) Table(tableName string, fn CreateTableFunc) {
+func NewSchemaWithTables(tables []Table) Schema {
+	return &schema{
+		tables: tables,
+	}
+}
+
+func (s *schema) CreateTableWithColumns(tableName string, columns []*Column) {
+	newTable := NewTableWithColumns(tableName, columns)
+	s.tables = append(s.tables, newTable)
+}
+
+func (s *schema) CreateTableWithFunc(tableName string, fn CreateTableFunc) {
 	newTable := NewTable(tableName)
 	fn(newTable)
 	s.tables = append(s.tables, newTable)

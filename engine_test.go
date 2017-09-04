@@ -27,8 +27,8 @@ func TestEngine(t *testing.T) {
 		engine := NewEngine(backEnd)
 
 		engine.AddMigration("create_users_table", NewMigrationWrapper(
-			func(schema Schema) {
-				schema.CreateTable("users", func(table Table) {
+			func(changeSet ChangeSet) {
+				changeSet.CreateTableWithFunc("users", func(table Table) {
 					table.Primary("id")
 					table.String("name", 100).AllowNull(false)
 					table.String("email", 150).AllowNull(false)
@@ -37,14 +37,14 @@ func TestEngine(t *testing.T) {
 					table.DateTime("updated_at").AllowNull(true)
 				})
 			},
-			func(schema Schema) {
-				schema.DropTable("users")
+			func(changeSet ChangeSet) {
+				changeSet.DropTable("users")
 			},
 		))
 
 		engine.AddMigration("create_accounts_table", NewMigrationWrapper(
-			func(schema Schema) {
-				schema.CreateTable("accounts", func(table Table) {
+			func(changeSet ChangeSet) {
+				changeSet.CreateTableWithFunc("accounts", func(table Table) {
 					table.Primary("id")
 					table.String("name", 100).AllowNull(false)
 					table.String("number", 150).AllowNull(false)
@@ -52,8 +52,8 @@ func TestEngine(t *testing.T) {
 					table.DateTime("updated_at").AllowNull(true)
 				})
 			},
-			func(schema Schema) {
-				schema.DropTable("accounts")
+			func(changeSet ChangeSet) {
+				changeSet.DropTable("accounts")
 			},
 		))
 
