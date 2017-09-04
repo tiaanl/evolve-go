@@ -1,7 +1,7 @@
 package evolve
 
 type ChangeSet interface {
-	CreateTableWithFunc(tableName string, fn CreateTableFunc)
+	CreateTable(tableName string, fn CreateTableFunc)
 	DropTable(tableName string)
 }
 
@@ -15,7 +15,7 @@ type changeSet struct {
 	commandBus *commandBus
 }
 
-func (cs *changeSet) CreateTableWithFunc(tableName string, fn CreateTableFunc) {
+func (cs *changeSet) CreateTable(tableName string, fn CreateTableFunc) {
 	// Create a blank table structure that will hold our column definitions.
 	newTable := NewTable(tableName)
 
