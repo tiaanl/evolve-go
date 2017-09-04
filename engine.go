@@ -49,7 +49,7 @@ func (e *engine) Update() error {
 	commandBus := newCommandBus()
 
 	// Create the user friendly schema we'll pass to the user so that they can interact with the command bus.
-	schema := NewSchema(commandBus)
+	changeSet := NewChangeSet(commandBus)
 
 	// Run through all the existingMigrations to gather commands into the schema's command bus.
 	for _, migrationName := range e.order {
@@ -60,7 +60,7 @@ func (e *engine) Update() error {
 
 		if !exists {
 			migration := e.migrations[migrationName]
-			migration.Up(schema)
+			migration.Up(changeSet)
 			e.migrationList.Add(migrationName)
 		}
 	}

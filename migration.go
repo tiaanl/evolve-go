@@ -1,11 +1,11 @@
 package evolve
 
 type Migration interface {
-	Up(schema Schema)
-	Down(schema Schema)
+	Up(changeSet ChangeSet)
+	Down(changeSet ChangeSet)
 }
 
-func NewMigrationWrapper(up func(Schema), down func(Schema)) Migration {
+func NewMigrationWrapper(up func(ChangeSet), down func(ChangeSet)) Migration {
 	return &migrationWrapper{
 		upFunc:   up,
 		downFunc: down,
@@ -13,14 +13,14 @@ func NewMigrationWrapper(up func(Schema), down func(Schema)) Migration {
 }
 
 type migrationWrapper struct {
-	upFunc   func(Schema)
-	downFunc func(Schema)
+	upFunc   func(ChangeSet)
+	downFunc func(ChangeSet)
 }
 
-func (m *migrationWrapper) Up(schema Schema) {
-	m.upFunc(schema)
+func (m *migrationWrapper) Up(changeSet ChangeSet) {
+	m.upFunc(changeSet)
 }
 
-func (m *migrationWrapper) Down(schema Schema) {
-	m.downFunc(schema)
+func (m *migrationWrapper) Down(changeSet ChangeSet) {
+	m.downFunc(changeSet)
 }
