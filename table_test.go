@@ -2,6 +2,7 @@ package evolve
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,7 +12,7 @@ func TestTable_Primary(t *testing.T) {
 	table.Primary("id")
 
 	assert.Equal(t, "id", table.Column("id").Name)
-	assert.Equal(t, COLUMN_TYPE_UNSIGNED_INTEGER, table.Column("id").Type)
+	assert.Equal(t, COLUMN_TYPE_INTEGER, table.Column("id").Type)
 	assert.Equal(t, 0, table.Column("id").Size)
 	assert.Equal(t, false, table.Column("id").AllowNull)
 	assert.Equal(t, true, table.Column("id").IsPrimary)

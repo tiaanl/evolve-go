@@ -4,7 +4,6 @@ type ColumnType int
 
 const (
 	COLUMN_TYPE_INTEGER ColumnType = iota
-	COLUMN_TYPE_UNSIGNED_INTEGER
 	COLUMN_TYPE_STRING
 	COLUMN_TYPE_DATE_TIME
 )
@@ -16,6 +15,50 @@ type Column struct {
 	AllowNull     bool
 	IsPrimary     bool
 	AutoIncrement bool
+}
+
+func NewColumnPrimary(name string) *Column {
+	return &Column{
+		Name:          name,
+		Type:          COLUMN_TYPE_INTEGER,
+		Size:          0,
+		AllowNull:     false,
+		IsPrimary:     true,
+		AutoIncrement: true,
+	}
+}
+
+func NewColumnString(name string, size int) *Column {
+	return &Column{
+		Name:          name,
+		Type:          COLUMN_TYPE_STRING,
+		Size:          size,
+		AllowNull:     true,
+		IsPrimary:     false,
+		AutoIncrement: false,
+	}
+}
+
+func NewColumnInteger(name string) *Column {
+	return &Column{
+		Name:          name,
+		Type:          COLUMN_TYPE_INTEGER,
+		Size:          9,
+		AllowNull:     true,
+		IsPrimary:     false,
+		AutoIncrement: false,
+	}
+}
+
+func NewColumnDateTime(name string) *Column {
+	return &Column{
+		Name:          name,
+		Type:          COLUMN_TYPE_DATE_TIME,
+		Size:          0,
+		AllowNull:     true,
+		IsPrimary:     false,
+		AutoIncrement: false,
+	}
 }
 
 func newFluentColumn(column *Column) *fluentColumn {

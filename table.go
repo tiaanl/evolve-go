@@ -5,7 +5,7 @@ type Table interface {
 
 	Columns() []*Column
 	Column(name string) *Column
-	AddColumn(column *Column)
+	AddColumns(columns ...*Column)
 
 	Primary(name string) *fluentColumn
 	String(name string, size int) *fluentColumn
@@ -51,19 +51,14 @@ func (t *table) Column(name string) *Column {
 	return nil
 }
 
-func (t *table) AddColumn(column *Column) {
-	t.columns = append(t.columns, column)
+func (t *table) AddColumns(columns ...*Column) {
+	for _, column := range columns {
+		t.columns = append(t.columns, column)
+	}
 }
 
 func (t *table) Primary(name string) *fluentColumn {
-	column := &Column{
-		Name:          name,
-		Type:          COLUMN_TYPE_UNSIGNED_INTEGER,
-		Size:          0,
-		AllowNull:     false,
-		IsPrimary:     true,
-		AutoIncrement: true,
-	}
+	column := NewColumnPrimary(name)
 
 	t.columns = append(t.columns, column)
 
@@ -71,14 +66,7 @@ func (t *table) Primary(name string) *fluentColumn {
 }
 
 func (t *table) String(name string, size int) *fluentColumn {
-	column := &Column{
-		Name:          name,
-		Type:          COLUMN_TYPE_STRING,
-		Size:          size,
-		AllowNull:     true,
-		IsPrimary:     false,
-		AutoIncrement: false,
-	}
+	column := NewColumnString(name, size)
 
 	t.columns = append(t.columns, column)
 
@@ -86,14 +74,7 @@ func (t *table) String(name string, size int) *fluentColumn {
 }
 
 func (t *table) Integer(name string) *fluentColumn {
-	column := &Column{
-		Name:          name,
-		Type:          COLUMN_TYPE_INTEGER,
-		Size:          9,
-		AllowNull:     true,
-		IsPrimary:     false,
-		AutoIncrement: false,
-	}
+	column := NewColumnInteger(name)
 
 	t.columns = append(t.columns, column)
 
@@ -101,14 +82,7 @@ func (t *table) Integer(name string) *fluentColumn {
 }
 
 func (t *table) DateTime(name string) *fluentColumn {
-	column := &Column{
-		Name:          name,
-		Type:          COLUMN_TYPE_DATE_TIME,
-		Size:          0,
-		AllowNull:     true,
-		IsPrimary:     false,
-		AutoIncrement: false,
-	}
+	column := NewColumnDateTime(name)
 
 	t.columns = append(t.columns, column)
 

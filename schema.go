@@ -7,12 +7,19 @@ type Schema interface {
 	CreateTableWithColumns(tableName string, columns []*Column)
 	CreateTableWithFunc(tableName string, fn CreateTableFunc)
 
+	GetTable(tableName string) Table
 	Tables() []Table
 }
 
 func NewSchema() Schema {
 	return &schema{
 		tables: []Table{},
+	}
+}
+
+func NewSchemaWithTables(tables []Table) Schema {
+	return &schema{
+		tables: tables,
 	}
 }
 
@@ -24,10 +31,14 @@ func (s *schema) Tables() []Table {
 	return s.tables
 }
 
-func NewSchemaWithTables(tables []Table) Schema {
-	return &schema{
-		tables: tables,
+func (s *schema) GetTable(tableName string) Table {
+	for _, table := range s.tables {
+		if table.Name() == tableName {
+			return table
+		}
 	}
+
+	return nil
 }
 
 func (s *schema) CreateTableWithColumns(tableName string, columns []*Column) {

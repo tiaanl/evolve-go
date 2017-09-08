@@ -45,11 +45,8 @@ func (e *engine) AddMigration(name string, migration Migration) error {
 }
 
 func (e *engine) Update() error {
-	// Create the command bus we will collect all the migration commands into.
-	commandBus := newCommandBus()
-
 	// Create the user friendly schema we'll pass to the user so that they can interact with the command bus.
-	changeSet := NewChangeSet(commandBus)
+	changeSet := NewChangeSet()
 
 	// Run through all the existingMigrations to gather commands into the schema's command bus.
 	for _, migrationName := range e.order {
@@ -66,7 +63,7 @@ func (e *engine) Update() error {
 	}
 
 	// Execute all the commands in the command bus and report any errors.
-	err := commandBus.Execute(e.backEnd)
+	err := changeSet.Execute(e.backEnd)
 	if err != nil {
 		return err
 	}

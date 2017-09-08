@@ -14,22 +14,29 @@ var (
 
 func NewBackEndMysql(db *sql.DB) BackEnd {
 	return &backEndMysql{
-		db: db,
+		db:      db,
+		dialect: NewDialectMysql(),
 	}
 }
 
 type backEndMysql struct {
-	db *sql.DB
+	db      *sql.DB
+	dialect Dialect
 }
 
-func (b *backEndMysql) ToSQL(s Schema) string {
+func (b *backEndMysql) ToSQL(s Schema) (string, error) {
 	var result string
 
 	for _, table := range s.Tables() {
-		result += createTableSQLMysql(table) + "\n"
+		createTableSQL, err := b.dialect.GetCreateTableSQL(table)
+		if err != nil {
+			return "", err
+		}
+
+		result += createTableSQL + "\n"
 	}
 
-	return result
+	return result, nil
 }
 
 func (b *backEndMysql) BuildSchema() (Schema, error) {
@@ -46,27 +53,13 @@ func (b *backEndMysql) Connection() *sql.DB {
 }
 
 func (b *backEndMysql) CreateTable(table Table) error {
-	sql := fmt.Sprintf("CREATE TABLE `%s` (%s)",
-		table.Name(),
-		generateColumnLinesMysql(table),
-	)
-
-	if b.db != nil {
-		_, err := b.db.Exec(sql)
+	createTableSQL, err := b.dialect.GetCreateTableSQL(table)
+	if err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func (b *backEndMysql) CreateTableIfNotExists(table Table) error {
-	sql := fmt.Sprintf("CREATE TABLE IF NOT EXISTS `%s` (%s)",
-		table.Name(),
-		generateColumnLinesMysql(table),
-	)
-
 	if b.db != nil {
-		_, err := b.db.Exec(sql)
+		_, err := b.db.Exec(createTableSQL)
 		return err
 	}
 
@@ -74,10 +67,13 @@ func (b *backEndMysql) CreateTableIfNotExists(table Table) error {
 }
 
 func (b *backEndMysql) DropTable(name string) error {
-	sql := fmt.Sprintf("DROP TABLE IF EXISTS `%s`", name)
+	dropTableSQL, err := b.dialect.GetDropTableSQL(name)
+	if err != nil {
+		return err
+	}
 
 	if b.db != nil {
-		_, err := b.db.Exec(sql)
+		_, err := b.db.Exec(dropTableSQL)
 		return err
 	}
 
@@ -93,79 +89,6 @@ func (b *backEndMysql) InsertData(table string, columns []string, values []strin
 	_, err := b.db.Exec(sql)
 
 	return err
-}
-
-func createTableSQLMysql(table Table) string {
-	return fmt.Sprintf("CREATE TABLE `%s` (%s)",
-		table.Name(),
-		generateColumnLinesMysql(table),
-	)
-}
-
-func generateColumnLinesMysql(table Table) string {
-	columnLines := []string{}
-	for _, column := range table.Columns() {
-		line := fmt.Sprintf("`%s` %s %s",
-			column.Name,
-			columnTypeToStringMysql(column),
-			nullOrNotNullMysql(column),
-		)
-
-		if column.AutoIncrement {
-			line = line + " AUTO_INCREMENT"
-		}
-
-		if column.IsPrimary {
-			line = line + " PRIMARY KEY"
-		}
-
-		columnLines = append(columnLines, line)
-	}
-
-	return strings.Join(columnLines, ", ")
-}
-
-func columnTypeToStringMysql(column *Column) string {
-	if column.Type == COLUMN_TYPE_INTEGER {
-		return "INT"
-	}
-
-	if column.Type == COLUMN_TYPE_UNSIGNED_INTEGER {
-		return "INT UNSIGNED"
-	}
-
-	if column.Type == COLUMN_TYPE_STRING {
-		return fmt.Sprintf("VARCHAR(%d)", column.Size)
-	}
-
-	if column.Type == COLUMN_TYPE_DATE_TIME {
-		return "TIMESTAMP"
-	}
-
-	panic("Incorrect column type")
-}
-
-func stringToColumnTypeMysql(columnType string) (ColumnType, error) {
-	switch strings.ToLower(columnType) {
-	case "varchar":
-		return COLUMN_TYPE_STRING, nil
-
-	case "int":
-		return COLUMN_TYPE_INTEGER, nil
-
-	case "timstamp":
-		return COLUMN_TYPE_DATE_TIME, nil
-	}
-
-	return COLUMN_TYPE_INTEGER, fmt.Errorf("Invalid string to column type. %q", columnType)
-}
-
-func nullOrNotNullMysql(column *Column) string {
-	if column.AllowNull {
-		return "NULL"
-	}
-
-	return "NOT NULL"
 }
 
 func (b *backEndMysql) buildTablesMysql() ([]Table, error) {
@@ -229,13 +152,9 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 
 		// varchar(100) unsigned
 		if results := regex_varchar.FindStringSubmatch(columnType); len(results) > 0 {
-			cType, err := stringToColumnTypeMysql(results[1])
+			cType, err := b.dialect.StringToColumnType(results[1])
 			if err != nil {
 				return nil, err
-			}
-
-			if cType == COLUMN_TYPE_INTEGER && strings.Contains(results[3], "unsigned") {
-				cType = COLUMN_TYPE_UNSIGNED_INTEGER
 			}
 
 			column.Type = cType
