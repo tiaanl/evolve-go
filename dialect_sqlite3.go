@@ -21,23 +21,22 @@ func (d *dialectSqlite3) GetCreateTableSQL(table Table) (string, error) {
 }
 
 func (d *dialectSqlite3) GetDropTableSQL(tableName string) (string, error) {
-	return fmt.Sprintf("DROP TABLE IF EXISTS `%s`", tableName), nil
+	return fmt.Sprintf("DROP TABLE `%s`", tableName), nil
 }
 
 func (d *dialectSqlite3) ColumnTypeToString(columnType ColumnType) (string, error) {
-	if columnType == COLUMN_TYPE_INTEGER {
+	switch columnType {
+	case COLUMN_TYPE_INTEGER:
 		return "INTEGER", nil
-	}
 
-	if columnType == COLUMN_TYPE_STRING {
+	case COLUMN_TYPE_STRING:
+		return "TEXT", nil
+
+	case COLUMN_TYPE_DATE_TIME:
 		return "TEXT", nil
 	}
 
-	if columnType == COLUMN_TYPE_DATE_TIME {
-		return "TIMESTAMP", nil
-	}
-
-	return "", fmt.Errorf("Invalid column type to column name. %q", columnType)
+	return "", fmt.Errorf("Invalid column type to column name. %s", columnType)
 }
 
 func (d *dialectSqlite3) StringToColumnType(str string) (ColumnType, error) {
@@ -47,9 +46,6 @@ func (d *dialectSqlite3) StringToColumnType(str string) (ColumnType, error) {
 
 	case "integer":
 		return COLUMN_TYPE_INTEGER, nil
-
-	case "datetime":
-		return COLUMN_TYPE_DATE_TIME, nil
 	}
 
 	return COLUMN_TYPE_INTEGER, fmt.Errorf("Invalid string to column type. %q", str)

@@ -21,7 +21,7 @@ func (d *dialectMysql) GetCreateTableSQL(table Table) (string, error) {
 }
 
 func (d *dialectMysql) GetDropTableSQL(tableName string) (string, error) {
-	return fmt.Sprintf("DROP TABLE IF EXISTS `%s`", tableName), nil
+	return fmt.Sprintf("DROP TABLE `%s`", tableName), nil
 }
 
 func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
