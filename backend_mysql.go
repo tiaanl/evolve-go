@@ -24,21 +24,6 @@ type backEndMysql struct {
 	dialect Dialect
 }
 
-func (b *backEndMysql) ToSQL(s Schema) (string, error) {
-	var result string
-
-	for _, table := range s.Tables() {
-		createTableSQL, err := b.dialect.GetCreateTableSQL(table)
-		if err != nil {
-			return "", err
-		}
-
-		result += createTableSQL + "\n"
-	}
-
-	return result, nil
-}
-
 func (b *backEndMysql) BuildSchema() (Schema, error) {
 	tables, err := b.buildTablesMysql()
 	if err != nil {

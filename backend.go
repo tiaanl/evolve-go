@@ -5,9 +5,6 @@ import (
 )
 
 type BackEnd interface {
-	// Return SQL for the given schema.
-	ToSQL(s Schema) (string, error)
-
 	// Return a Schema from the current connection.
 	BuildSchema() (Schema, error)
 

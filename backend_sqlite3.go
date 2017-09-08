@@ -18,21 +18,6 @@ type backEndSqlite3 struct {
 	dialect Dialect
 }
 
-func (b *backEndSqlite3) ToSQL(s Schema) (string, error) {
-	var result string
-
-	for _, table := range s.Tables() {
-		createTableSQL, err := b.dialect.GetCreateTableSQL(table)
-		if err != nil {
-			return "", err
-		}
-
-		result += createTableSQL + "\n"
-	}
-
-	return result, nil
-}
-
 func (b *backEndSqlite3) BuildSchema() (Schema, error) {
 	return nil, nil
 }
