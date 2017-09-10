@@ -2,16 +2,16 @@ package evolve
 
 func newAlterTableColumns() *alterTableColumns {
 	return &alterTableColumns{
-		toDrop:   []string{},
-		toAdd:    []*Column{},
-		toChange: []*Column{},
+		toDrop:  []string{},
+		toAdd:   []*Column{},
+		toAlter: []*Column{},
 	}
 }
 
 type alterTableColumns struct {
-	toDrop   []string
-	toAdd    []*Column
-	toChange []*Column
+	toDrop  []string
+	toAdd   []*Column
+	toAlter []*Column
 }
 
 func (atc *alterTableColumns) dropColumn(names ...string) {
@@ -26,8 +26,8 @@ func (atc *alterTableColumns) addColumns(columns ...*Column) {
 	}
 }
 
-func (atc *alterTableColumns) changeColumn(columns ...*Column) {
+func (atc *alterTableColumns) alterColumn(columns ...*Column) {
 	for _, column := range columns {
-		atc.toChange = append(atc.toChange, column)
+		atc.toAlter = append(atc.toAlter, column)
 	}
 }
