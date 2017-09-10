@@ -24,6 +24,10 @@ func (d *dialectSqlite3) GetDropTableSQL(tableName string) (string, error) {
 	return fmt.Sprintf("DROP TABLE `%s`", tableName), nil
 }
 
+func (d *dialectSqlite3) GetAlterTableSQL(tableName string, atc *alterTableColumns) (string, error) {
+	return "", nil
+}
+
 func (d *dialectSqlite3) ColumnTypeToString(columnType ColumnType) (string, error) {
 	switch columnType {
 	case COLUMN_TYPE_INTEGER:

@@ -7,6 +7,9 @@ type Dialect interface {
 	// Return SQL for dropping a table.
 	GetDropTableSQL(tableName string) (string, error)
 
+	// Return SQL for an alter table query.
+	GetAlterTableSQL(tableName string, atc *alterTableColumns) (string, error)
+
 	// Convert string with column type name to ColumnType.
 	StringToColumnType(columnName string) (ColumnType, error)
 

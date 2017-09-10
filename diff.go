@@ -21,8 +21,16 @@ func NewChangeSetFromSchameDiff(current, target Schema) (ChangeSet, error) {
 			continue
 		}
 
-		// Check if there are any schema differences between the two tables.
+		// We have to alter the current table.
+		atc := newAlterTableColumns()
 
+		// Check if we have to drop any columns.
+		for _, currentColumn := range currentTable.Columns() {
+			targetColumn := targetTable.Column(currentColumn.Name)
+			if targetColumn == nil {
+				atc.dropColumn(targetColumn.Name)
+			}
+		}
 	}
 
 	return changeSet, nil

@@ -1,6 +1,6 @@
 package evolve
 
-func newDropTableCommand(tableName string) command {
+func newDropTableCommand(tableName string) *dropTableCommand {
 	return &dropTableCommand{
 		tableName: tableName,
 	}

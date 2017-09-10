@@ -24,6 +24,24 @@ func (d *dialectMysql) GetDropTableSQL(tableName string) (string, error) {
 	return fmt.Sprintf("DROP TABLE `%s`", tableName), nil
 }
 
+func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns) (string, error) {
+	lines := []string{}
+
+	for _, name := range atc.toDrop {
+		lines = append(lines, fmt.Sprintf("DROP COLUMN `%s`", name))
+	}
+
+	for _, column := range atc.toAdd {
+		query, err := d.ColumnToString(column)
+		if err != nil {
+			return "", err
+		}
+		lines = append(lines, query)
+	}
+
+	return fmt.Sprintf("ALTER TABLE `%s` %s", strings.Join(lines, " ")), nil
+}
+
 func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
 	switch strings.ToLower(str) {
 	case "varchar":
