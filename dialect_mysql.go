@@ -31,12 +31,20 @@ func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns
 		lines = append(lines, fmt.Sprintf("DROP COLUMN `%s`", name))
 	}
 
+	for _, column := range atc.toChange {
+		query, err := d.ColumnToString(column)
+		if err != nil {
+			return "", err
+		}
+		lines = append(lines, fmt.Sprintf("CHANGE COLUMN %s", query))
+	}
+
 	for _, column := range atc.toAdd {
 		query, err := d.ColumnToString(column)
 		if err != nil {
 			return "", err
 		}
-		lines = append(lines, query)
+		lines = append(lines, fmt.Sprintf("ADD COLUMN %s", query))
 	}
 
 	return fmt.Sprintf("ALTER TABLE `%s` %s", tableName, strings.Join(lines, " ")), nil
