@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	regex_varchar = regexp.MustCompile(`(\S+)\((\d+)\)( unsigned)?`)
+	regexVarchar = regexp.MustCompile(`(\S+)\((\d+)\)( unsigned)?`)
 )
 
 func NewBackEndMysql(db *sql.DB) BackEnd {
@@ -22,15 +22,6 @@ func NewBackEndMysql(db *sql.DB) BackEnd {
 type backEndMysql struct {
 	db      *sql.DB
 	dialect Dialect
-}
-
-func (b *backEndMysql) BuildSchema() (Schema, error) {
-	tables, err := b.buildTablesMysql()
-	if err != nil {
-		return nil, err
-	}
-
-	return NewSchemaWithTables(tables), nil
 }
 
 func (b *backEndMysql) Connection() *sql.DB {
@@ -76,6 +67,15 @@ func (b *backEndMysql) InsertData(table string, columns []string, values []strin
 	return err
 }
 
+func (b *backEndMysql) BuildSchema() (Schema, error) {
+	tables, err := b.buildTablesMysql()
+	if err != nil {
+		return nil, err
+	}
+
+	return NewSchemaWithTables(tables), nil
+}
+
 func (b *backEndMysql) buildTablesMysql() ([]Table, error) {
 	rows, err := b.db.Query("SHOW TABLES")
 	if err != nil {
@@ -116,14 +116,7 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 	var columnKey, columnDefault, columnExtra sql.NullString
 
 	for rows.Next() {
-		err = rows.Scan(
-			&columnName,
-			&columnType,
-			&columnNull,
-			&columnKey,
-			&columnDefault,
-			&columnExtra,
-		)
+		err = rows.Scan(&columnName, &columnType, &columnNull, &columnKey, &columnDefault, &columnExtra)
 		if err != nil {
 			return nil, err
 		}
@@ -136,7 +129,7 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 		}
 
 		// varchar(100) unsigned
-		if results := regex_varchar.FindStringSubmatch(columnType); len(results) > 0 {
+		if results := regexVarchar.FindStringSubmatch(columnType); len(results) > 0 {
 			cType, err := b.dialect.StringToColumnType(results[1])
 			if err != nil {
 				return nil, err
