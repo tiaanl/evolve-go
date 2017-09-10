@@ -17,6 +17,15 @@ type Column struct {
 	AutoIncrement bool
 }
 
+func (c *Column) Equals(other *Column) bool {
+	return c.Name == other.Name &&
+		c.Type == other.Type &&
+		c.Size == other.Size &&
+		c.AllowNull == other.AllowNull &&
+		c.IsPrimary == other.IsPrimary &&
+		c.AutoIncrement == other.AutoIncrement
+}
+
 func NewColumnPrimary(name string) *Column {
 	return &Column{
 		Name:          name,

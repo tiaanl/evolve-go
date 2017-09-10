@@ -24,11 +24,26 @@ func NewChangeSetFromSchameDiff(current, target Schema) (ChangeSet, error) {
 		// We have to alter the current table.
 		atc := newAlterTableColumns()
 
-		// Check if we have to drop any columns.
 		for _, currentColumn := range currentTable.Columns() {
 			targetColumn := targetTable.Column(currentColumn.Name)
+
+			// Check if we have to drop the column in the current table.
 			if targetColumn == nil {
-				atc.dropColumn(targetColumn.Name)
+				atc.dropColumn(currentColumn.Name)
+				continue
+			}
+
+			// Check if we have to alter the current column.
+			if !currentColumn.Equals(targetColumn) {
+				atc.changeColumn(targetColumn)
+			}
+		}
+
+		// Check if we have to create the column in the current table.
+		for _, targetColumn := range targetTable.Columns() {
+			currentColumn := currentTable.Column(targetColumn.Name)
+			if currentColumn == nil {
+				atc.addColumns(targetColumn)
 			}
 		}
 
