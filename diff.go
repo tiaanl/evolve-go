@@ -35,7 +35,7 @@ func NewChangeSetFromSchameDiff(current, target Schema) (ChangeSet, error) {
 
 			// Check if we have to alter the current column.
 			if !currentColumn.Equals(targetColumn) {
-				atc.changeColumn(targetColumn)
+				atc.alterColumn(targetColumn)
 			}
 		}
 
