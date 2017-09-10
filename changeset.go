@@ -1,6 +1,10 @@
 package evolve
 
+import "strings"
+
 type ChangeSet interface {
+	ToSQL(dialect Dialect) (string, error)
+
 	CreateTable(table Table)
 	CreateTableWithFunc(tableName string, fn CreateTableFunc)
 	DropTable(tableName string)
@@ -22,6 +26,20 @@ func NewChangeSetWithCommandBus(commandBus *commandBus) ChangeSet {
 
 type changeSet struct {
 	commandBus *commandBus
+}
+
+func (cs *changeSet) ToSQL(dialect Dialect) (string, error) {
+	lines := []string{}
+
+	for _, command := range cs.commandBus.commands {
+		query, err := command.ToSQL(dialect)
+		if err != nil {
+			return "", nil
+		}
+		lines = append(lines, query)
+	}
+
+	return strings.Join(lines, "\n"), nil
 }
 
 func (cs *changeSet) CreateTable(table Table) {
@@ -49,4 +67,3 @@ func (cs *changeSet) DropTable(name string) {
 func (cs *changeSet) Execute(backEnd BackEnd) error {
 	return cs.commandBus.Execute(backEnd)
 }
-
