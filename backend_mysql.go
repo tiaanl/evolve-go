@@ -28,6 +28,10 @@ func (b *backEndMysql) Connection() *sql.DB {
 	return b.db
 }
 
+func (b *backEndMysql) Dialect() Dialect {
+	return b.dialect
+}
+
 func (b *backEndMysql) CreateTable(table Table) error {
 	createTableSQL, err := b.dialect.GetCreateTableSQL(table)
 	if err != nil {

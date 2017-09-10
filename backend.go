@@ -8,6 +8,9 @@ type BackEnd interface {
 	// Return the connection that this back end represents.
 	Connection() *sql.DB
 
+	// Return the dialect used by this backend.
+	Dialect() Dialect
+
 	// Create a table on the connection.
 	CreateTable(table Table) error
 

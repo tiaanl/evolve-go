@@ -26,6 +26,10 @@ func (b *backEndSqlite3) Connection() *sql.DB {
 	return b.db
 }
 
+func (b *backEndSqlite3) Dialect() Dialect {
+	return b.dialect
+}
+
 func (b *backEndSqlite3) CreateTable(table Table) error {
 	createTableSQL, err := b.dialect.GetCreateTableSQL(table)
 	if err != nil {
