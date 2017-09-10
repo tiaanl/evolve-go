@@ -31,6 +31,8 @@ func NewChangeSetFromSchameDiff(current, target Schema) (ChangeSet, error) {
 				atc.dropColumn(targetColumn.Name)
 			}
 		}
+
+		changeSet.AlterTable(currentTable.Name(), atc)
 	}
 
 	return changeSet, nil

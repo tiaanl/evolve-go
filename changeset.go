@@ -8,6 +8,7 @@ type ChangeSet interface {
 	CreateTable(table Table)
 	CreateTableWithFunc(tableName string, fn CreateTableFunc)
 	DropTable(tableName string)
+	AlterTable(tableName string, atc *alterTableColumns)
 
 	Execute(backEnd BackEnd) error
 }
@@ -62,6 +63,10 @@ func (cs *changeSet) CreateTableWithFunc(tableName string, fn CreateTableFunc) {
 
 func (cs *changeSet) DropTable(name string) {
 	cs.commandBus.Add(newDropTableCommand(name))
+}
+
+func (cs *changeSet) AlterTable(tableName string, atc *alterTableColumns) {
+	cs.commandBus.Add(newAlterTableCommand(tableName, atc))
 }
 
 func (cs *changeSet) Execute(backEnd BackEnd) error {

@@ -39,7 +39,7 @@ func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns
 		lines = append(lines, query)
 	}
 
-	return fmt.Sprintf("ALTER TABLE `%s` %s", strings.Join(lines, " ")), nil
+	return fmt.Sprintf("ALTER TABLE `%s` %s", tableName, strings.Join(lines, " ")), nil
 }
 
 func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
