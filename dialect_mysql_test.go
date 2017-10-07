@@ -29,7 +29,7 @@ func TestDialectMysqlGetDropTableSQL(t *testing.T) {
 
 	dropTableSQL, err = dialect.GetDropTableSQL("test_table")
 	assert.NoError(t, err)
-	assert.Equal(t, "DROP TABLE `test_table`", dropTableSQL)
+	assert.Equal(t, "DROP TABLE `test_table`;", dropTableSQL)
 }
 
 func TestDialectMysqlColumnTypeToString(t *testing.T) {
