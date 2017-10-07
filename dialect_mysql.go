@@ -66,12 +66,16 @@ func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
 }
 
 func (d *dialectMysql) ColumnTypeToString(columnType ColumnType) (string, error) {
+	if columnType == ColumnTypeString {
+		return "VARCHAR", nil
+	}
+
 	if columnType == ColumnTypeInteger {
 		return "INT", nil
 	}
 
-	if columnType == ColumnTypeString {
-		return "VARCHAR", nil
+	if columnType == ColumnTypeFloat {
+		return "FLOAT", nil
 	}
 
 	if columnType == ColumnTypeDateTime {

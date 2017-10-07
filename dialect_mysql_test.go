@@ -36,13 +36,17 @@ func TestDialectMysqlColumnTypeToString(t *testing.T) {
 	var err error
 	dialect := NewDialectMysql()
 
+	columnTypeString, err := dialect.ColumnTypeToString(ColumnTypeString)
+	assert.NoError(t, err)
+	assert.Equal(t, "VARCHAR", columnTypeString)
+
 	columnTypeInt, err := dialect.ColumnTypeToString(ColumnTypeInteger)
 	assert.NoError(t, err)
 	assert.Equal(t, "INT", columnTypeInt)
 
-	columnTypeString, err := dialect.ColumnTypeToString(ColumnTypeString)
+	columnTypeFloat, err := dialect.ColumnTypeToString(ColumnTypeFloat)
 	assert.NoError(t, err)
-	assert.Equal(t, "VARCHAR", columnTypeString)
+	assert.Equal(t, "FLOAT", columnTypeFloat)
 
 	columnTypeDateTime, err := dialect.ColumnTypeToString(ColumnTypeDateTime)
 	assert.NoError(t, err)
