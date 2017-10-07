@@ -138,7 +138,7 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 			column.Type = ColumnTypeDateTime
 			column.Size = 0
 		} else if results := regexVarchar.FindStringSubmatch(columnType); len(results) > 0 {
-			// int(100) unsigned
+			// int(11) unsigned
 			// varchar(100)
 
 			cType, err := b.dialect.StringToColumnType(results[1])
@@ -153,7 +153,10 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 				return nil, err
 			}
 
-			column.Size = cSize
+			// HACK: For int columns, we set the size to 0.
+			if results[1] != "int" {
+				column.Size = cSize
+			}
 		} else {
 			return nil, fmt.Errorf("invalid column type (%s)", columnType)
 		}
