@@ -47,7 +47,9 @@ func NewChangeSetFromSchemaDiff(current, target Schema) (ChangeSet, error) {
 			}
 		}
 
-		changeSet.AlterTable(currentTable.Name(), atc)
+		if !atc.isEmpty() {
+			changeSet.AlterTable(currentTable.Name(), atc)
+		}
 	}
 
 	return changeSet, nil
