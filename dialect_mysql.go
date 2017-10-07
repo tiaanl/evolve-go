@@ -17,11 +17,11 @@ func (d *dialectMysql) GetCreateTableSQL(table Table) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("CREATE TABLE `%s` (%s)", table.Name(), columnLines), nil
+	return fmt.Sprintf("CREATE TABLE `%s` (%s);", table.Name(), columnLines), nil
 }
 
 func (d *dialectMysql) GetDropTableSQL(tableName string) (string, error) {
-	return fmt.Sprintf("DROP TABLE `%s`", tableName), nil
+	return fmt.Sprintf("DROP TABLE `%s`;", tableName), nil
 }
 
 func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns) (string, error) {
@@ -36,7 +36,7 @@ func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns
 		if err != nil {
 			return "", err
 		}
-		lines = append(lines, fmt.Sprintf("ALTER %s", query))
+		lines = append(lines, fmt.Sprintf("MODIFY %s", query))
 	}
 
 	for _, column := range atc.toAdd {
@@ -44,10 +44,10 @@ func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns
 		if err != nil {
 			return "", err
 		}
-		lines = append(lines, fmt.Sprintf("ADD COLUMN %s", query))
+		lines = append(lines, fmt.Sprintf("ADD %s", query))
 	}
 
-	return fmt.Sprintf("ALTER TABLE `%s` %s", tableName, strings.Join(lines, " ")), nil
+	return fmt.Sprintf("ALTER TABLE `%s` %s;", tableName, strings.Join(lines, ", ")), nil
 }
 
 func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
@@ -62,7 +62,7 @@ func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
 		return ColumnTypeDateTime, nil
 	}
 
-	return ColumnTypeInteger, fmt.Errorf("invalid string to column type. %q", str)
+	return ColumnTypeInteger, fmt.Errorf("invalid string to column type (%q)", str)
 }
 
 func (d *dialectMysql) ColumnTypeToString(columnType ColumnType) (string, error) {
@@ -82,7 +82,7 @@ func (d *dialectMysql) ColumnTypeToString(columnType ColumnType) (string, error)
 		return "TIMESTAMP", nil
 	}
 
-	return "", fmt.Errorf("invalid column type to string. %d", columnType)
+	return "", fmt.Errorf("invalid column type to string (%d)", columnType)
 }
 
 func (d *dialectMysql) ColumnToString(column *Column) (string, error) {
