@@ -13,6 +13,9 @@ type alterTableCommand struct {
 }
 
 func (c *alterTableCommand) ToSQL(dialect Dialect) (string, error) {
+	if c.atc.isEmpty() {
+		return "", nil
+	}
 	return dialect.GetAlterTableSQL(c.tableName, c.atc)
 }
 

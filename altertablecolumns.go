@@ -31,3 +31,7 @@ func (atc *alterTableColumns) alterColumn(columns ...*Column) {
 		atc.toAlter = append(atc.toAlter, column)
 	}
 }
+
+func (atc *alterTableColumns) isEmpty() bool {
+	return len(atc.toAdd) == 0 && len(atc.toAlter) == 0 && len(atc.toDrop) == 0
+}
