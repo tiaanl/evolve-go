@@ -132,8 +132,15 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 			AutoIncrement: columnExtra.Valid && strings.Contains(strings.ToLower(columnExtra.String), "auto_increment"),
 		}
 
-		// varchar(100) unsigned
-		if results := regexVarchar.FindStringSubmatch(columnType); len(results) > 0 {
+		if strings.ToLower(columnType) == "float" {
+			column.Type = ColumnTypeFloat
+		} else if strings.ToLower(columnType) == "timestamp" {
+			column.Type = ColumnTypeDateTime
+			column.Size = 0
+		} else if results := regexVarchar.FindStringSubmatch(columnType); len(results) > 0 {
+			// int(100) unsigned
+			// varchar(100)
+
 			cType, err := b.dialect.StringToColumnType(results[1])
 			if err != nil {
 				return nil, err
@@ -147,11 +154,8 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 			}
 
 			column.Size = cSize
-		} else if strings.ToLower(columnType) == "timestamp" {
-			column.Type = ColumnTypeDateTime
-			column.Size = 0
 		} else {
-			return nil, fmt.Errorf("invalid column type. %q", columnType)
+			return nil, fmt.Errorf("invalid column type (%s)", columnType)
 		}
 
 		columns = append(columns, column)
