@@ -32,7 +32,7 @@ func (e *engine) AddMigration(name string, migration Migration) error {
 	// Make sure the key doesn't exist already.
 	_, exists := e.migrations[name]
 	if exists {
-		return fmt.Errorf("Migration with that name already exists (%s)", name)
+		return fmt.Errorf("migration with that name already exists (%s)", name)
 	}
 
 	// Set the key and migration.

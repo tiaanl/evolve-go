@@ -64,9 +64,9 @@ func (b *backEndMysql) InsertData(table string, columns []string, values []strin
 	columnsStr := fmt.Sprintf("(`%s`)", strings.Join(columns, "`), (`"))
 	valuesStr := fmt.Sprintf("('%s')", strings.Join(values, "'), ('"))
 
-	sql := fmt.Sprintf("INSERT INTO `%s` %s VALUES %s", table, columnsStr, valuesStr)
+	query := fmt.Sprintf("INSERT INTO `%s` %s VALUES %s", table, columnsStr, valuesStr)
 
-	_, err := b.db.Exec(sql)
+	_, err := b.db.Exec(query)
 
 	return err
 }
@@ -148,10 +148,10 @@ func (b *backEndMysql) buildColumnsMysql(tableName string) ([]*Column, error) {
 
 			column.Size = cSize
 		} else if strings.ToLower(columnType) == "timestamp" {
-			column.Type = COLUMN_TYPE_DATE_TIME
+			column.Type = ColumnTypeDateTime
 			column.Size = 0
 		} else {
-			return nil, fmt.Errorf("Invalid column type. %q", columnType)
+			return nil, fmt.Errorf("invalid column type. %q", columnType)
 		}
 
 		columns = append(columns, column)

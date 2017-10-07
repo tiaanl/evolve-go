@@ -30,29 +30,29 @@ func (d *dialectSqlite3) GetAlterTableSQL(tableName string, atc *alterTableColum
 
 func (d *dialectSqlite3) ColumnTypeToString(columnType ColumnType) (string, error) {
 	switch columnType {
-	case COLUMN_TYPE_INTEGER:
+	case ColumnTypeInteger:
 		return "INTEGER", nil
 
-	case COLUMN_TYPE_STRING:
+	case ColumnTypeString:
 		return "TEXT", nil
 
-	case COLUMN_TYPE_DATE_TIME:
+	case ColumnTypeDateTime:
 		return "TEXT", nil
 	}
 
-	return "", fmt.Errorf("Invalid column type to column name. %s", columnType)
+	return "", fmt.Errorf("invalid column type to column name. %d", columnType)
 }
 
 func (d *dialectSqlite3) StringToColumnType(str string) (ColumnType, error) {
 	switch strings.ToLower(str) {
 	case "varchar":
-		return COLUMN_TYPE_STRING, nil
+		return ColumnTypeString, nil
 
 	case "integer":
-		return COLUMN_TYPE_INTEGER, nil
+		return ColumnTypeInteger, nil
 	}
 
-	return COLUMN_TYPE_INTEGER, fmt.Errorf("Invalid string to column type. %q", str)
+	return ColumnTypeInteger, fmt.Errorf("invalid string to column type. %q", str)
 }
 
 func (d *dialectSqlite3) ColumnToString(column *Column) (string, error) {

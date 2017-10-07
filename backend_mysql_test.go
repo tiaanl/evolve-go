@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBackEndMysql_CreateTable(t *testing.T) {
+func TestBackEndMysqlCreateTable(t *testing.T) {
 	var err error
 
 	db, mock, err := sqlmock.New()
@@ -21,7 +21,7 @@ func TestBackEndMysql_CreateTable(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestBackEndMysql_DropTable(t *testing.T) {
+func TestBackEndMysqlDropTable(t *testing.T) {
 	var err error
 
 	db, mock, err := sqlmock.New()
@@ -35,7 +35,7 @@ func TestBackEndMysql_DropTable(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestBackEndMysql_InsertData(t *testing.T) {
+func TestBackEndMysqlInsertData(t *testing.T) {
 	var err error
 
 	db, mock, err := sqlmock.New()

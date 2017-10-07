@@ -3,9 +3,10 @@ package evolve
 type ColumnType int
 
 const (
-	COLUMN_TYPE_INTEGER ColumnType = iota
-	COLUMN_TYPE_STRING
-	COLUMN_TYPE_DATE_TIME
+	ColumnTypeString ColumnType = iota
+	ColumnTypeInteger
+	ColumnTypeFloat
+	ColumnTypeDateTime
 )
 
 type Column struct {
@@ -29,7 +30,7 @@ func (c *Column) Equals(other *Column) bool {
 func NewColumnPrimary(name string) *Column {
 	return &Column{
 		Name:          name,
-		Type:          COLUMN_TYPE_INTEGER,
+		Type:          ColumnTypeInteger,
 		Size:          0,
 		AllowNull:     false,
 		IsPrimary:     true,
@@ -40,7 +41,7 @@ func NewColumnPrimary(name string) *Column {
 func NewColumnString(name string, size int) *Column {
 	return &Column{
 		Name:          name,
-		Type:          COLUMN_TYPE_STRING,
+		Type:          ColumnTypeString,
 		Size:          size,
 		AllowNull:     true,
 		IsPrimary:     false,
@@ -51,8 +52,19 @@ func NewColumnString(name string, size int) *Column {
 func NewColumnInteger(name string) *Column {
 	return &Column{
 		Name:          name,
-		Type:          COLUMN_TYPE_INTEGER,
-		Size:          9,
+		Type:          ColumnTypeInteger,
+		Size:          0,
+		AllowNull:     true,
+		IsPrimary:     false,
+		AutoIncrement: false,
+	}
+}
+
+func NewColumnFloat(name string) *Column {
+	return &Column{
+		Name:          name,
+		Type:          ColumnTypeFloat,
+		Size:          0,
 		AllowNull:     true,
 		IsPrimary:     false,
 		AutoIncrement: false,
@@ -62,7 +74,7 @@ func NewColumnInteger(name string) *Column {
 func NewColumnDateTime(name string) *Column {
 	return &Column{
 		Name:          name,
-		Type:          COLUMN_TYPE_DATE_TIME,
+		Type:          ColumnTypeDateTime,
 		Size:          0,
 		AllowNull:     true,
 		IsPrimary:     false,

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDialectMysql_GetCreateTableSQL(t *testing.T) {
+func TestDialectMysqlGetCreateTableSQL(t *testing.T) {
 	var err error
 	var createTableSQL string
 	dialect := NewDialectMysql()
@@ -22,7 +22,7 @@ func TestDialectMysql_GetCreateTableSQL(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestDialectMysql_GetDropTableSQL(t *testing.T) {
+func TestDialectMysqlGetDropTableSQL(t *testing.T) {
 	var err error
 	var dropTableSQL string
 	dialect := NewDialectMysql()
@@ -32,19 +32,19 @@ func TestDialectMysql_GetDropTableSQL(t *testing.T) {
 	assert.Equal(t, "DROP TABLE `test_table`", dropTableSQL)
 }
 
-func TestDialectMysql_ColumnTypeToString(t *testing.T) {
+func TestDialectMysqlColumnTypeToString(t *testing.T) {
 	var err error
 	dialect := NewDialectMysql()
 
-	columnTypeInt, err := dialect.ColumnTypeToString(COLUMN_TYPE_INTEGER)
+	columnTypeInt, err := dialect.ColumnTypeToString(ColumnTypeInteger)
 	assert.NoError(t, err)
 	assert.Equal(t, "INT", columnTypeInt)
 
-	columnTypeString, err := dialect.ColumnTypeToString(COLUMN_TYPE_STRING)
+	columnTypeString, err := dialect.ColumnTypeToString(ColumnTypeString)
 	assert.NoError(t, err)
 	assert.Equal(t, "VARCHAR", columnTypeString)
 
-	columnTypeDateTime, err := dialect.ColumnTypeToString(COLUMN_TYPE_DATE_TIME)
+	columnTypeDateTime, err := dialect.ColumnTypeToString(ColumnTypeDateTime)
 	assert.NoError(t, err)
 	assert.Equal(t, "TIMESTAMP", columnTypeDateTime)
 
@@ -53,28 +53,28 @@ func TestDialectMysql_ColumnTypeToString(t *testing.T) {
 	assert.Contains(t, err.Error(), "2345")
 }
 
-func TestDialectMysql_StringToColumnType(t *testing.T) {
+func TestDialectMysqlStringToColumnType(t *testing.T) {
 	var err error
 	dialect := NewDialectMysql()
 
 	columnTypeInt, err := dialect.StringToColumnType("int")
 	assert.NoError(t, err)
-	assert.Equal(t, COLUMN_TYPE_INTEGER, columnTypeInt)
+	assert.Equal(t, ColumnTypeInteger, columnTypeInt)
 
 	columnTypeString, err := dialect.StringToColumnType("varchar")
 	assert.NoError(t, err)
-	assert.Equal(t, COLUMN_TYPE_STRING, columnTypeString)
+	assert.Equal(t, ColumnTypeString, columnTypeString)
 
 	columnTypeDateTime, err := dialect.StringToColumnType("timestamp")
 	assert.NoError(t, err)
-	assert.Equal(t, COLUMN_TYPE_DATE_TIME, columnTypeDateTime)
+	assert.Equal(t, ColumnTypeDateTime, columnTypeDateTime)
 
 	_, err = dialect.StringToColumnType("unknown")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "unknown")
 }
 
-func TestDialectMysql_ColumnToString(t *testing.T) {
+func TestDialectMysqlColumnToString(t *testing.T) {
 	var err error
 	var str string
 

@@ -1,6 +1,6 @@
 package evolve
 
-func NewChangeSetFromSchameDiff(current, target Schema) (ChangeSet, error) {
+func NewChangeSetFromSchemaDiff(current, target Schema) (ChangeSet, error) {
 	changeSet := NewChangeSet()
 
 	// Check if we need to drop table in the current schema.

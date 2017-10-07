@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDialectSqlite3_GetCreateTableSQL(t *testing.T) {
+func TestDialectSqlite3GetCreateTableSQL(t *testing.T) {
 	var err error
 	var createTableSQL string
 	dialect := NewDialectSqlite3()
@@ -22,7 +22,7 @@ func TestDialectSqlite3_GetCreateTableSQL(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestDialectSqlite3_GetDropTableSQL(t *testing.T) {
+func TestDialectSqlite3GetDropTableSQL(t *testing.T) {
 	var err error
 	var dropTableSQL string
 	dialect := NewDialectSqlite3()
@@ -32,19 +32,19 @@ func TestDialectSqlite3_GetDropTableSQL(t *testing.T) {
 	assert.Equal(t, "DROP TABLE `test_table`", dropTableSQL)
 }
 
-func TestDialectSqlite3_ColumnTypeToString(t *testing.T) {
+func TestDialectSqlite3ColumnTypeToString(t *testing.T) {
 	var err error
 	dialect := NewDialectSqlite3()
 
-	columnTypeInt, err := dialect.ColumnTypeToString(COLUMN_TYPE_INTEGER)
+	columnTypeInt, err := dialect.ColumnTypeToString(ColumnTypeInteger)
 	assert.NoError(t, err)
 	assert.Equal(t, "INTEGER", columnTypeInt)
 
-	columnTypeString, err := dialect.ColumnTypeToString(COLUMN_TYPE_STRING)
+	columnTypeString, err := dialect.ColumnTypeToString(ColumnTypeString)
 	assert.NoError(t, err)
 	assert.Equal(t, "TEXT", columnTypeString)
 
-	columnTypeDateTime, err := dialect.ColumnTypeToString(COLUMN_TYPE_DATE_TIME)
+	columnTypeDateTime, err := dialect.ColumnTypeToString(ColumnTypeDateTime)
 	assert.NoError(t, err)
 	assert.Equal(t, "TEXT", columnTypeDateTime)
 
@@ -53,24 +53,24 @@ func TestDialectSqlite3_ColumnTypeToString(t *testing.T) {
 	assert.Contains(t, err.Error(), "2345")
 }
 
-func TestDialectSqlite3_StringToColumnType(t *testing.T) {
+func TestDialectSqlite3StringToColumnType(t *testing.T) {
 	var err error
 	dialect := NewDialectSqlite3()
 
 	columnTypeInt, err := dialect.StringToColumnType("integer")
 	assert.NoError(t, err)
-	assert.Equal(t, COLUMN_TYPE_INTEGER, columnTypeInt)
+	assert.Equal(t, ColumnTypeInteger, columnTypeInt)
 
 	columnTypeString, err := dialect.StringToColumnType("varchar")
 	assert.NoError(t, err)
-	assert.Equal(t, COLUMN_TYPE_STRING, columnTypeString)
+	assert.Equal(t, ColumnTypeString, columnTypeString)
 
 	_, err = dialect.StringToColumnType("unknown")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "unknown")
 }
 
-func TestDialectSqlite3_ColumnToString(t *testing.T) {
+func TestDialectSqlite3ColumnToString(t *testing.T) {
 	var err error
 	var str string
 

@@ -2,14 +2,15 @@ package evolve
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFluentColumn_IsPrimary(t *testing.T) {
+func TestFluentColumnIsPrimary(t *testing.T) {
 	column := Column{
-		Name: "column",
-		Type: COLUMN_TYPE_STRING,
-		Size: 100,
+		Name:      "column",
+		Type:      ColumnTypeString,
+		Size:      100,
 		AllowNull: true,
 		IsPrimary: false,
 	}
@@ -24,11 +25,11 @@ func TestFluentColumn_IsPrimary(t *testing.T) {
 	assert.Equal(t, false, fc.column.IsPrimary)
 }
 
-func TestFluentColumn_AllowNull(t *testing.T) {
+func TestFluentColumnAllowNull(t *testing.T) {
 	column := Column{
-		Name: "column",
-		Type: COLUMN_TYPE_STRING,
-		Size: 100,
+		Name:      "column",
+		Type:      ColumnTypeString,
+		Size:      100,
 		AllowNull: true,
 		IsPrimary: false,
 	}

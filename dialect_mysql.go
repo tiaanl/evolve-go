@@ -53,32 +53,32 @@ func (d *dialectMysql) GetAlterTableSQL(tableName string, atc *alterTableColumns
 func (d *dialectMysql) StringToColumnType(str string) (ColumnType, error) {
 	switch strings.ToLower(str) {
 	case "varchar":
-		return COLUMN_TYPE_STRING, nil
+		return ColumnTypeString, nil
 
 	case "int":
-		return COLUMN_TYPE_INTEGER, nil
+		return ColumnTypeInteger, nil
 
 	case "timestamp":
-		return COLUMN_TYPE_DATE_TIME, nil
+		return ColumnTypeDateTime, nil
 	}
 
-	return COLUMN_TYPE_INTEGER, fmt.Errorf("Invalid string to column type. %q", str)
+	return ColumnTypeInteger, fmt.Errorf("invalid string to column type. %q", str)
 }
 
 func (d *dialectMysql) ColumnTypeToString(columnType ColumnType) (string, error) {
-	if columnType == COLUMN_TYPE_INTEGER {
+	if columnType == ColumnTypeInteger {
 		return "INT", nil
 	}
 
-	if columnType == COLUMN_TYPE_STRING {
+	if columnType == ColumnTypeString {
 		return "VARCHAR", nil
 	}
 
-	if columnType == COLUMN_TYPE_DATE_TIME {
+	if columnType == ColumnTypeDateTime {
 		return "TIMESTAMP", nil
 	}
 
-	return "", fmt.Errorf("Invalid column type to string. %d", columnType)
+	return "", fmt.Errorf("invalid column type to string. %d", columnType)
 }
 
 func (d *dialectMysql) ColumnToString(column *Column) (string, error) {
@@ -87,7 +87,7 @@ func (d *dialectMysql) ColumnToString(column *Column) (string, error) {
 		return "", err
 	}
 
-	if column.Type == COLUMN_TYPE_STRING {
+	if column.Type == ColumnTypeString {
 		columnTypeString += fmt.Sprintf("(%d)", column.Size)
 	}
 
