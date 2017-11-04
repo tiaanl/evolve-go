@@ -101,7 +101,7 @@ func (b *backEndMysql) buildTablesMysql() ([]Table, error) {
 			return nil, err
 		}
 
-		tables = append(tables, NewTableWithColumns(tableName, columns))
+		tables = append(tables, NewTableWithColumns(tableName, columns...))
 	}
 
 	return tables, nil

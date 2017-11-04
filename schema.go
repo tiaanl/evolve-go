@@ -8,7 +8,7 @@ type CreateTableFunc func(t Table)
 type Schema interface {
 	ToSQL(dialect Dialect) (string, error)
 
-	CreateTableWithColumns(tableName string, columns []*Column)
+	CreateTableWithColumns(tableName string, columns ...*Column)
 	CreateTableWithFunc(tableName string, fn CreateTableFunc)
 
 	GetTable(tableName string) Table
@@ -46,8 +46,8 @@ func (s *schema) ToSQL(dialect Dialect) (string, error) {
 	return strings.Join(lines, "\n"), nil
 }
 
-func (s *schema) CreateTableWithColumns(tableName string, columns []*Column) {
-	newTable := NewTableWithColumns(tableName, columns)
+func (s *schema) CreateTableWithColumns(tableName string, columns ...*Column) {
+	newTable := NewTableWithColumns(tableName, columns...)
 	s.tables = append(s.tables, newTable)
 }
 

@@ -18,6 +18,31 @@ type Column struct {
 	AutoIncrement bool
 }
 
+func (c *Column) WithName(name string) *Column {
+	c.Name = name
+	return c
+}
+
+func (c *Column) WithType(t ColumnType) *Column {
+	c.Type = t
+	return c
+}
+
+func (c *Column) WithSize(size int) *Column {
+	c.Size = size
+	return c
+}
+
+func (c *Column) Null() *Column {
+	c.AllowNull = true
+	return c
+}
+
+func (c *Column) NotNull() *Column {
+	c.AllowNull = false
+	return c
+}
+
 func (c *Column) Equals(other *Column) bool {
 	return c.Name == other.Name &&
 		c.Type == other.Type &&
@@ -38,7 +63,7 @@ func NewColumnPrimary(name string) *Column {
 	}
 }
 
-func NewColumnString(name string, size int) *Column {
+func StringColumn(name string, size int) *Column {
 	return &Column{
 		Name:          name,
 		Type:          ColumnTypeString,
@@ -49,7 +74,7 @@ func NewColumnString(name string, size int) *Column {
 	}
 }
 
-func NewColumnInteger(name string) *Column {
+func IntegerColumn(name string) *Column {
 	return &Column{
 		Name:          name,
 		Type:          ColumnTypeInteger,
@@ -60,7 +85,7 @@ func NewColumnInteger(name string) *Column {
 	}
 }
 
-func NewColumnFloat(name string) *Column {
+func FloatColumn(name string) *Column {
 	return &Column{
 		Name:          name,
 		Type:          ColumnTypeFloat,
@@ -71,7 +96,7 @@ func NewColumnFloat(name string) *Column {
 	}
 }
 
-func NewColumnDateTime(name string) *Column {
+func DateTimeColumn(name string) *Column {
 	return &Column{
 		Name:          name,
 		Type:          ColumnTypeDateTime,
@@ -80,29 +105,4 @@ func NewColumnDateTime(name string) *Column {
 		IsPrimary:     false,
 		AutoIncrement: false,
 	}
-}
-
-func newFluentColumn(column *Column) *fluentColumn {
-	return &fluentColumn{
-		column: column,
-	}
-}
-
-type fluentColumn struct {
-	column *Column
-}
-
-func (f *fluentColumn) AllowNull(allowNull bool) *fluentColumn {
-	f.column.AllowNull = allowNull
-	return f
-}
-
-func (f *fluentColumn) IsPrimary(isPrimary bool) *fluentColumn {
-	f.column.IsPrimary = isPrimary
-	return f
-}
-
-func (f *fluentColumn) AutoIncrement(autoIncrement bool) *fluentColumn {
-	f.column.AutoIncrement = autoIncrement
-	return f
 }

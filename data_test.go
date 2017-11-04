@@ -4,9 +4,9 @@ var (
 	testTable = NewTable("test_table")
 
 	testColumnPrimary  = NewColumnPrimary("id")
-	testColumnString   = NewColumnString("username", 50)
-	testColumnInteger  = NewColumnInteger("age")
-	testColumnDateTime = NewColumnDateTime("last_login")
+	testColumnString   = StringColumn("username", 50)
+	testColumnInteger  = IntegerColumn("age")
+	testColumnDateTime = DateTimeColumn("last_login")
 
 	testColumnInvalid = &Column{
 		Type: 2345,

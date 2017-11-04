@@ -6,11 +6,6 @@ type Table interface {
 	Columns() []*Column
 	Column(name string) *Column
 	AddColumns(columns ...*Column)
-
-	Primary(name string) *fluentColumn
-	String(name string, size int) *fluentColumn
-	Integer(name string) *fluentColumn
-	DateTime(name string) *fluentColumn
 }
 
 func NewTable(name string) Table {
@@ -20,7 +15,7 @@ func NewTable(name string) Table {
 	}
 }
 
-func NewTableWithColumns(tableName string, columns []*Column) Table {
+func NewTableWithColumns(tableName string, columns ...*Column) Table {
 	return &table{
 		name:    tableName,
 		columns: columns,
@@ -55,36 +50,4 @@ func (t *table) AddColumns(columns ...*Column) {
 	for _, column := range columns {
 		t.columns = append(t.columns, column)
 	}
-}
-
-func (t *table) Primary(name string) *fluentColumn {
-	column := NewColumnPrimary(name)
-
-	t.columns = append(t.columns, column)
-
-	return newFluentColumn(column)
-}
-
-func (t *table) String(name string, size int) *fluentColumn {
-	column := NewColumnString(name, size)
-
-	t.columns = append(t.columns, column)
-
-	return newFluentColumn(column)
-}
-
-func (t *table) Integer(name string) *fluentColumn {
-	column := NewColumnInteger(name)
-
-	t.columns = append(t.columns, column)
-
-	return newFluentColumn(column)
-}
-
-func (t *table) DateTime(name string) *fluentColumn {
-	column := NewColumnDateTime(name)
-
-	t.columns = append(t.columns, column)
-
-	return newFluentColumn(column)
 }
