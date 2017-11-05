@@ -6,6 +6,7 @@ type ChangeSet interface {
 	ToSQL(dialect Dialect) (string, error)
 
 	CreateTable(table Table)
+	CreateTableWithColumns(tableName string, columns ...*Column)
 	CreateTableWithFunc(tableName string, fn CreateTableFunc)
 	DropTable(tableName string)
 	AlterTable(tableName string, atc *alterTableColumns)
@@ -45,6 +46,11 @@ func (cs *changeSet) ToSQL(dialect Dialect) (string, error) {
 
 func (cs *changeSet) CreateTable(table Table) {
 	cs.commandBus.Add(newCreateTableCommand(table))
+}
+
+func (cs *changeSet) CreateTableWithColumns(tableName string, columns ...*Column) {
+	newTable := NewTableWithColumns(tableName, columns...)
+	cs.commandBus.Add(newCreateTableCommand(newTable))
 }
 
 func (cs *changeSet) CreateTableWithFunc(tableName string, fn CreateTableFunc) {

@@ -6,21 +6,21 @@ type Migration interface {
 }
 
 func NewMigrationWrapper(up func(ChangeSet), down func(ChangeSet)) Migration {
-	return &migrationWrapper{
+	return &migration{
 		upFunc:   up,
 		downFunc: down,
 	}
 }
 
-type migrationWrapper struct {
+type migration struct {
 	upFunc   func(ChangeSet)
 	downFunc func(ChangeSet)
 }
 
-func (m *migrationWrapper) Up(changeSet ChangeSet) {
+func (m *migration) Up(changeSet ChangeSet) {
 	m.upFunc(changeSet)
 }
 
-func (m *migrationWrapper) Down(changeSet ChangeSet) {
+func (m *migration) Down(changeSet ChangeSet) {
 	m.downFunc(changeSet)
 }

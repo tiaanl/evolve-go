@@ -5,6 +5,7 @@ import (
 )
 
 type Engine interface {
+	NewMigration(name string, up func(ChangeSet), down func(ChangeSet))
 	AddMigration(name string, migration Migration) error
 
 	Update() error
@@ -26,6 +27,13 @@ type engine struct {
 	order         map[int]string
 	lastIndex     int
 	migrationList MigrationList
+}
+
+func (e *engine) NewMigration(name string, up func(ChangeSet), down func(ChangeSet)) {
+	e.migrations[name] = &migration{
+		upFunc:   up,
+		downFunc: down,
+	}
 }
 
 func (e *engine) AddMigration(name string, migration Migration) error {
