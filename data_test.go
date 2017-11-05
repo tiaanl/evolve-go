@@ -3,7 +3,7 @@ package evolve
 var (
 	testTable = NewTable("test_table")
 
-	testColumnPrimary  = NewColumnPrimary("id")
+	testColumnPrimary  = PrimaryColumn("id")
 	testColumnString   = StringColumn("username", 50)
 	testColumnInteger  = IntegerColumn("age")
 	testColumnDateTime = DateTimeColumn("last_login")

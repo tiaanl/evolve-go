@@ -52,7 +52,7 @@ func (c *Column) Equals(other *Column) bool {
 		c.AutoIncrement == other.AutoIncrement
 }
 
-func NewColumnPrimary(name string) *Column {
+func PrimaryColumn(name string) *Column {
 	return &Column{
 		Name:          name,
 		Type:          ColumnTypeInteger,
